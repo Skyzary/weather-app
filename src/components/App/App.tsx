@@ -103,6 +103,7 @@ export default function App() {
   };
   return (
     <div className={css.App}>
+      <h1 className={css.appHeader}>Погода</h1>
       <VillageSearchField onSearch={handleVillageSearch} />
       <h2 className={css.appHeader}>Погода в городе: {weatherData?.name}</h2>
 
