@@ -1,0 +1,8 @@
+* {
+  color: white;
+}
+body {
+  background: url("./assets/bg.jpg") no-repeat center center fixed;
+  background-size: cover;
+  font-family: Arial, sans-serif;
+}
