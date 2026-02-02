@@ -1,5 +1,4 @@
 import VillageSearchField from "../VillageSearchField/VillageSearchField";
-import type { CityCoords } from "../../types/WeatherData";
 import { useState } from "react";
 import axios from "axios";
 import WeatherData from "../WeatherData/WeatherData";
@@ -33,10 +32,6 @@ interface CurrentWeatherData {
 
 export default function App() {
   const [loading, setLoading] = useState(false);
-  const [location, setLocation] = useState<CityCoords | null>(() => {
-    const savedLocation = localStorage.getItem("location");
-    return savedLocation ? JSON.parse(savedLocation) : null;
-  });
   const [weatherData, setWeatherData] = useState<CurrentWeatherData | null>(
     () => {
       const savedWeatherData = localStorage.getItem("weatherData");
@@ -73,11 +68,9 @@ export default function App() {
       return;
     }
     const coords = await convertVillageNameToCoords(villageName);
-    if (!coords) {
-      return;
-    }
-    setLocation(coords);
-    localStorage.setItem("location", JSON.stringify(coords));
+    // Если coords не получены, выходим из функции
+    if (!coords) return;
+
     const { lat, lon, name } = coords || { lat: 0, lon: 0, name: "" };
     console.log(`Village: ${name}, Latitude: ${lat}, Longitude: ${lon}`);
     const params = {
