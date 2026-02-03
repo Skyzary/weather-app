@@ -1,5 +1,6 @@
 import { useState } from "react";
 import css from "./VillageSearchField.module.css";
+import { Glow, GlowCapture } from "@codaworks/react-glow";
 interface VillageSearchFieldProps {
   onSearch: (villageName: string) => void;
 }
@@ -21,14 +22,18 @@ export default function VillageSearchField({
   };
   return (
     <div className={css.searchContainer}>
-      <input
-        className={css.searchField}
-        type="text"
-        value={villageName}
-        onChange={handleInputChange}
-        placeholder="Введите название города"
-        autoFocus
-      />
+      <GlowCapture>
+        <Glow>
+          <input
+            className={css.searchField}
+            type="text"
+            value={villageName}
+            onChange={handleInputChange}
+            placeholder="Введите название города"
+            autoFocus
+          />
+        </Glow>
+      </GlowCapture>
       <button onClick={handleSearch} className={css.searchBtn}>
         Поиск
       </button>

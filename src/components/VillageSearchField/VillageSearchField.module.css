@@ -1,23 +1,28 @@
 .searchField {
-  width: 100%;
+  width: 90vw;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 16px;
   line-height: 1.5;
   box-sizing: border-box;
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin: 0 auto;
   text-align: center;
   color: rgb(255, 255, 255);
 }
+.searchField .glow {
+  width: 90vw;
+}
+.searchField ::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
 .searchField:focus {
   border-color: #17476d;
   outline: none;
-  box-shadow: 0 0 8px rgba(102, 175, 233, 0.6);
+  box-shadow: 0 0 8px rgba(23, 71, 109, 0.6);
 }
 .searchBtn {
   background-color: rgb(103, 175, 233, 0.5);

@@ -1,4 +1,5 @@
 import css from "./WeatherData.module.css";
+import { GlowCapture, Glow } from "@codaworks/react-glow";
 interface WeatherDataProps {
   data: {
     name: string;
@@ -10,6 +11,7 @@ interface WeatherDataProps {
     };
     weather: {
       description: string;
+      icon?: string;
     }[];
     wind?: {
       speed: number;
@@ -20,41 +22,57 @@ interface WeatherDataProps {
 export default function WeatherData({ data }: WeatherDataProps) {
   return (
     <div className={css.weatherDataContainer}>
-      <div className={css.subContainer}>
-        <p className={css.prop}>
-          Температура <span>{Math.round(data.main.temp)}°C</span>
-        </p>
-        <p className={css.prop}>
-          Влажность <span>{data.main.humidity}%</span>
-        </p>
-      </div>
-      <div className={css.subContainer}>
-        <p className={css.prop}>
-          Ощущаемая температура
-          <span>
-            {data.main.feels_like
-              ? `${Math.round(data.main.feels_like)}°C`
-              : "Недоступно"}
-          </span>
-        </p>
-      </div>
-      <div className={css.subContainer}>
-        <p className={css.prop}>
-          Атмосферное давление
-          <span>
-            {data.main.pressure ? `${data.main.pressure} гПа` : "Недоступно"}
-          </span>
-        </p>
-        <p className={css.prop}>
-          Скорость ветра
-          <span>
-            {data.wind?.speed ? `${data.wind.speed} м/с` : "Недоступно"}
-          </span>
-        </p>
-      </div>
-      <p className={css.prop}>
-        Описание <span>{data.weather[0].description}</span>
-      </p>
+      <GlowCapture>
+        <div className={css.subContainer}>
+          <Glow>
+            <p className={css.prop}>
+              Температура <span>{Math.round(data.main.temp)}°C</span>
+            </p>
+          </Glow>
+          <Glow>
+            <p className={css.prop + " " + css.humidity}>
+              Влажность <span>{data.main.humidity}%</span>
+            </p>
+          </Glow>
+        </div>
+        <div className={css.subContainer}>
+          <Glow>
+            <p className={css.prop + " " + css.feelsLike}>
+              Ощущаемая температура
+              <span>
+                {data.main.feels_like
+                  ? `${Math.round(data.main.feels_like)}°C`
+                  : "Недоступно"}
+              </span>
+            </p>
+          </Glow>
+        </div>
+        <div className={css.subContainer}>
+          <Glow>
+            <p className={css.prop + " " + css.pressure}>
+              Атмосферное давление
+              <span>
+                {data.main.pressure
+                  ? `${data.main.pressure} гПа`
+                  : "Недоступно"}
+              </span>
+            </p>
+          </Glow>
+          <Glow>
+            <p className={css.prop + " " + css.windSpeed}>
+              Скорость ветра
+              <span>
+                {data.wind?.speed ? `${data.wind.speed} м/с` : "Недоступно"}
+              </span>
+            </p>
+          </Glow>
+        </div>
+        <Glow>
+          <p className={css.prop + " " + css.description}>
+            Описание <span>{data.weather[0].description}</span>
+          </p>
+        </Glow>
+      </GlowCapture>
     </div>
   );
 }

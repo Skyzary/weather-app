@@ -1,10 +1,12 @@
 import VillageSearchField from "../VillageSearchField/VillageSearchField";
-import { useState } from "react";
 import axios from "axios";
+import { useState, useEffect } from "react";
 import WeatherData from "../WeatherData/WeatherData";
 import { MoonLoader } from "react-spinners";
 import css from "./App.module.css";
 import "../../index.css";
+import IziToast from "izitoast";
+import { GlowCapture, Glow } from "@codaworks/react-glow";
 
 interface requestParams {
   q: string;
@@ -31,6 +33,7 @@ interface CurrentWeatherData {
 }
 
 export default function App() {
+  const [cityFound, setCityFound] = useState(true);
   const [loading, setLoading] = useState(false);
   const [weatherData, setWeatherData] = useState<CurrentWeatherData | null>(
     () => {
@@ -60,6 +63,7 @@ export default function App() {
       };
     } catch (error) {
       console.error("Error fetching coordinates:", error);
+      setLoading(false);
       return null;
     }
   }
@@ -68,8 +72,9 @@ export default function App() {
       return;
     }
     const coords = await convertVillageNameToCoords(villageName);
-    // Если coords не получены, выходим из функции
-    if (!coords) return;
+    if (!coords) {
+      setCityFound(false);
+    }
 
     const { lat, lon, name } = coords || { lat: 0, lon: 0, name: "" };
     console.log(`Village: ${name}, Latitude: ${lat}, Longitude: ${lon}`);
@@ -89,23 +94,39 @@ export default function App() {
         name: name,
         main: response.data.main,
         weather: response.data.weather,
-        wind: response.data.wind, // Пример добавления данных о ветре
+        wind: response.data.wind,
       };
+      setCityFound(true);
       setWeatherData(weatherDataToSave);
       localStorage.setItem("weatherData", JSON.stringify(weatherDataToSave));
       setLoading(false);
       return weatherDataToSave;
     } catch (error) {
       console.error("Error fetching weather data:", error);
+      setCityFound(false);
       setWeatherData(null);
+      setLoading(false);
       return null;
     }
   };
+
+  useEffect(() => {
+    if (!cityFound) {
+      IziToast.error({
+        title: "Ошибка",
+        message: "Город не найден. Пожалуйста, попробуйте еще раз.",
+        position: "topCenter", // Изменено на topCenter для лучшего отображения
+      });
+    }
+  }, [cityFound]);
+
   return (
     <div className={css.App}>
       <h1 className={css.appHeader}>Погода</h1>
       <VillageSearchField onSearch={handleVillageSearch} />
-      <h2 className={css.appHeader}>Погода в городе: {weatherData?.name}</h2>
+      {weatherData && (
+        <h2 className={css.appHeader}>Погода в городе: {weatherData.name}</h2>
+      )}
 
       {loading && (
         <div className={css.loader}>
