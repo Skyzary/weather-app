@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import css from "./VillageSearchField.module.css";
 import { Glow, GlowCapture } from "@codaworks/react-glow";
 interface VillageSearchFieldProps {
@@ -8,9 +8,13 @@ interface VillageSearchFieldProps {
 export default function VillageSearchField({
   onSearch,
 }: VillageSearchFieldProps) {
-  const [villageName, setVillageName] = useState(() => {
-    return localStorage.getItem("villageName") || "";
-  });
+  const [villageName, setVillageName] = useState("");
+  useEffect(() => {
+    const savedVillageName = localStorage.getItem("villageName");
+    if (savedVillageName) {
+      setVillageName(savedVillageName);
+    }
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setVillageName(e.target.value);
@@ -22,21 +26,20 @@ export default function VillageSearchField({
   };
   return (
     <div className={css.searchContainer}>
+      <input
+        className={css.searchField}
+        type="text"
+        value={villageName}
+        onChange={handleInputChange}
+        placeholder="Введите название города или деревни"
+      />
       <GlowCapture>
         <Glow>
-          <input
-            className={css.searchField}
-            type="text"
-            value={villageName}
-            onChange={handleInputChange}
-            placeholder="Введите название города"
-            autoFocus
-          />
+          <button onClick={handleSearch} className={css.searchBtn}>
+            Поиск
+          </button>
         </Glow>
       </GlowCapture>
-      <button onClick={handleSearch} className={css.searchBtn}>
-        Поиск
-      </button>
     </div>
   );
 }

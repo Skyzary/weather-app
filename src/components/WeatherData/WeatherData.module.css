@@ -3,10 +3,15 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  background-color: rgba(13, 91, 225, 0.2);
+  background-image: linear-gradient(
+    to bottom,
+    rgba(13, 91, 225, 0.25),
+    rgba(13, 91, 225, 0.15)
+  );
   backdrop-filter: blur(10px);
   padding: 16px;
   border-radius: 8px;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.3);
 
   height: 200px;
@@ -38,8 +43,13 @@
 }
 
 .description {
-  background-color: rgba(13, 225, 165, 0.2);
+  background-image: linear-gradient(
+    to bottom,
+    rgba(13, 225, 165, 0.25),
+    rgba(13, 225, 165, 0.15)
+  ); /* Легкий градиент */
   overflow-y: hidden;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.2);
   grid-column: 1 / -1;
 }
 
@@ -61,14 +71,30 @@
 }
 
 .windSpeed {
-  background-color: rgba(127, 15, 129, 0.2);
+  background-image: linear-gradient(
+    to bottom,
+    rgba(127, 15, 129, 0.25),
+    rgba(127, 15, 129, 0.15)
+  ); /* Легкий градиент */
 }
 .pressure {
-  background-color: rgba(225, 193, 13, 0.2);
+  background-image: linear-gradient(
+    to bottom,
+    rgba(225, 193, 13, 0.25),
+    rgba(225, 193, 13, 0.15)
+  ); /* Легкий градиент */
 }
 .feelsLike {
-  background-color: rgba(225, 13, 84, 0.2);
+  background-image: linear-gradient(
+    to bottom,
+    rgba(225, 13, 84, 0.25),
+    rgba(225, 13, 84, 0.15)
+  ); /* Легкий градиент */
 }
 .humidity {
-  background-color: rgba(13, 150, 225, 0.2);
+  background-image: linear-gradient(
+    to bottom,
+    rgba(13, 150, 225, 0.25),
+    rgba(13, 150, 225, 0.15)
+  ); /* Легкий градиент */
 }

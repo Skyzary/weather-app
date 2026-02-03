@@ -70,7 +70,9 @@ export default function App() {
     if (!villageName.trim()) {
       return;
     }
+    localStorage.clear();
     const coords = await convertVillageNameToCoords(villageName);
+    localStorage.setItem("villageName", villageName);
     if (!coords) {
       setCityFound(false);
     }
