@@ -6,7 +6,6 @@ import { MoonLoader } from "react-spinners";
 import css from "./App.module.css";
 import "../../index.css";
 import IziToast from "izitoast";
-import { GlowCapture, Glow } from "@codaworks/react-glow";
 
 interface requestParams {
   q: string;
