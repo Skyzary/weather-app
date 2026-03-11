@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import css from "./VillageSearchField.module.css";
-import { Glow, GlowCapture } from "@codaworks/react-glow";
+import { GlassInput } from "@mawtech/glass-ui"
+import { FaSearch } from "react-icons/fa";
+
 interface VillageSearchFieldProps {
   onSearch: (villageName: string) => void;
 }
@@ -25,21 +27,19 @@ export default function VillageSearchField({
     onSearch(villageName);
   };
   return (
-    <div className={css.searchContainer}>
-      <input
+      <GlassInput
         className={css.searchField}
+       inputSize='md'
         type="text"
         value={villageName}
         onChange={handleInputChange}
+        rightIcon={<FaSearch onClick={handleSearch} className={css.searchIcon} size={'35px'} /> }
         placeholder="Введите название города или деревни"
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            handleSearch();
+          }
+        }}
       />
-      <GlowCapture>
-        <Glow>
-          <button onClick={handleSearch} className={css.searchBtn}>
-            Поиск
-          </button>
-        </Glow>
-      </GlowCapture>
-    </div>
   );
 }

@@ -1,72 +1,27 @@
-.searchField {
-  width: 90vw;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 16px;
-  line-height: 1.5;
-  box-sizing: border-box;
-  background-color: rgb(255, 255, 255, 0.6);
-  backdrop-filter: blur(10px);
-
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  margin: 0 auto;
-  text-align: center;
-  color: rgb(0, 0, 0);
-  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.2);
-  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
-  transition: box-shadow 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  transition: background-color 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-.searchField .glow {
-  width: 90vw;
-}
-.searchField:hover {
-  background-color: #fff;
-  border-color: #17476d;
-  box-shadow: 0 0 0 2px #17476d;
-}
-.searchField:focus {
-  border-color: #17476d;
-  outline: none;
-  box-shadow: 0 0 0 2px #17476d;
-  background-color: #fff;
-}
-.searchBtn {
-  background-image: linear-gradient(
-    to bottom,
-    rgba(103, 175, 233, 0.55),
-    rgba(103, 175, 233, 0.45)
-  );
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
-  margin-top: 10px;
-  width: 300px;
-
-  @media (max-width: 768px) {
-    width: 100%;
-    max-width: 300px;
-  }
-  &:hover {
-    background-color: #17476d;
-  }
-}
-
 .searchContainer {
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
+  gap: 10px;
 }
-.searchField::placeholder {
-  color: #000000;
-  opacity: 0.7;
+.searchBtn{
+  width: 100px;
+}
+.searchIcon{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(131, 35, 220, 0.5);
+  border-radius: 50%;
+  padding: 10px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  &:hover{
+    background-color: rgba(131, 35, 220, 0.7);
+  }
+
+}
+.searchField{
+  padding: 30px;
 }
