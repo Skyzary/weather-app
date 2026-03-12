@@ -5,4 +5,19 @@
   text-align: center;
   color: white;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  font-size: x-large;
+  margin-bottom: 20px;
+}
+.App {
+  position: relative;
+  min-height: 100vh;
+  background-color: #020617;
+  overflow: hidden;
+  padding: 20px;
+}
+body, .App {
+  background: radial-gradient(
+          circle at top right,
+          #1e1b4b 0%, #0f172a 50%,  #020617 100%
+  ) fixed;
 }
