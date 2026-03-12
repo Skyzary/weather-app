@@ -35,7 +35,7 @@ export default function WeatherData({ data }: WeatherDataProps) {
 
                 <div className={css.description}>
                     <Glow color="#fff">
-                        <GlassCard className={`${css.prop} ${css.descriptionCard} glow:border-blue-500`} style={{ height: '100%' }}>
+                        <GlassCard className={`${css.prop} ${css.descriptionCard} `}>
                             {getWeatherIcon(data.weather[0].icon)}
                             <p>Описание</p>
                             <span>{data.weather[0].description}</span>
@@ -45,7 +45,7 @@ export default function WeatherData({ data }: WeatherDataProps) {
 
                 <div className={css.tempBlock}>
                     <Glow color="#fff">
-                        <GlassCard className={`${css.prop} ${css.tempBlockCard} glow:border-blue-500`} style={{ height: '100%' }}>
+                        <GlassCard className={`${css.prop} ${css.tempBlockCard} `}>
                             <FaTemperatureHigh size={48} />
                             <p>Температура</p>
                             <div>
@@ -60,7 +60,7 @@ export default function WeatherData({ data }: WeatherDataProps) {
 
                 <div className={css.humidity}>
                     <Glow color="#fff">
-                        <GlassCard className={`${css.prop} ${css.humidityCard} glow:border-blue-500`} style={{ height: '100%' }}>
+                        <GlassCard className={`${css.prop} ${css.humidityCard} `}>
                             <WiHumidity size={64} />
                             <p>Влажность</p>
                             <span>{data.main.humidity}%</span>
@@ -69,7 +69,7 @@ export default function WeatherData({ data }: WeatherDataProps) {
                 </div>
                 <div className={css.windSpeed}>
                     <Glow color="#fff">
-                        <GlassCard className={`${css.prop} ${css.windSpeedCard} glow:border-blue-500`} style={{ height: '100%' }}>
+                        <GlassCard className={`${css.prop} ${css.windSpeedCard} `}>
                             <FaWind size={48} />
                             <p>Скорость ветра</p>
                             <span>
@@ -81,7 +81,7 @@ export default function WeatherData({ data }: WeatherDataProps) {
 
                 <div className={css.pressure}>
                     <Glow color="#fff">
-                        <GlassCard className={`${css.prop} ${css.pressureCard} glow:border-blue-500`} style={{ height: '100%' }}>
+                        <GlassCard className={`${css.prop} ${css.pressureCard} `}>
                             <FaTachometerAlt size={48} />
                             <p>Давление</p>
                             <span>

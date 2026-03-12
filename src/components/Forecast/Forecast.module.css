@@ -7,11 +7,20 @@
     margin-bottom: 16px;
     text-align: center;
     font-weight: 300;
-    opacity: 0.9;
 }
 
 .glassCard {
     width: 100%;
+    background: rgba(0, 0, 0, 0.3) linear-gradient(
+            135deg,
+            rgba(37, 105, 164, 0.1),
+            rgba(12, 208, 234, 0.1)
+    ) !important;
+
+    backdrop-filter: blur(12px);
+    border-radius: 16px !important;
+
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
 .forecastContainer {

@@ -9,15 +9,9 @@
   margin-bottom: 20px;
 }
 .App {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/bg.jpg');
   position: relative;
   min-height: 100vh;
-  background-color: #020617;
   overflow: hidden;
   padding: 20px;
-}
-body, .App {
-  background: radial-gradient(
-          circle at top right,
-          #1e1b4b 0%, #0f172a 50%,  #020617 100%
-  ) fixed;
 }
