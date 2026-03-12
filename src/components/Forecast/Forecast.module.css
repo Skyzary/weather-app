@@ -1,0 +1,95 @@
+.forecastSection {
+    margin-top: 40px;
+    color: white;
+}
+
+.forecastSection h3 {
+    margin-bottom: 16px;
+    text-align: center;
+    font-weight: 300;
+    opacity: 0.9;
+}
+
+.glassCard {
+    width: 100%;
+}
+
+.forecastContainer {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px;
+    overflow-x: auto;
+}
+
+.dayItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    flex: 1;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.dayItem:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 15%;
+    height: 70%;
+    width: 1px;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.date {
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: capitalize;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.icon {
+    margin: 10px 0;
+}
+
+.temp {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.desc {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    text-align: center;
+    text-transform: capitalize;
+    margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+    .forecastContainer {
+        justify-content: flex-start;
+        padding-bottom: 10px;
+        overflow-x: auto;
+        flex-direction: column;
+    }
+
+    .dayItem {
+        min-width: 140px;
+        flex: none;
+    }
+
+    .dayItem:not(:last-child)::after {
+        display: block;
+        width: 80%;
+        height: 1px;
+        top: auto;
+        bottom: 0;
+        right: auto;
+    }
+}
+.forecastTitle{
+    font-size: large;
+}

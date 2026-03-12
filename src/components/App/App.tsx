@@ -7,13 +7,16 @@ import IziToast from "izitoast";
 import { useEffect } from "react";
 import { useStore } from "../../hooks/useStore";
 import '@mawtech/glass-ui/styles.css';
+import Forecast from "../Forecast/Forecast.tsx";
 
 export default function App() {
   const {
     weatherData,
     loading,
     cityFound,
-    fetchWeather
+    fetchWeather,
+    forecastData,
+    foreCast
   } = useStore();
 
   useEffect(() => {
@@ -25,6 +28,12 @@ export default function App() {
       });
     }
   }, [cityFound]);
+
+  useEffect(() => {
+        if (weatherData && weatherData.name) {
+            foreCast(weatherData.name);
+        }
+    }, [weatherData, foreCast]);
 
   return (
       <div className={css.App}>
@@ -45,6 +54,7 @@ export default function App() {
 
 
         {weatherData && !loading && <WeatherData data={weatherData} />}
+        {forecastData && !loading && <Forecast forecastData={forecastData} />}
       </div>
   );
 }
