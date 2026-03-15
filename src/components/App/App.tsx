@@ -14,7 +14,6 @@ export default function App() {
     weatherData,
     loading,
     cityFound,
-    fetchWeather,
     forecastData,
     foreCast
   } = useStore();
@@ -37,10 +36,9 @@ export default function App() {
 
   return (
       <div className={css.App}>
-        <h1 className={css.appHeader}>Погода</h1>
 
 
-        <VillageSearchField onSearch={fetchWeather} />
+        <VillageSearchField/>
 
         {weatherData && (
             <h2 className={css.appHeader}>Погода в городе: {weatherData.name}</h2>
