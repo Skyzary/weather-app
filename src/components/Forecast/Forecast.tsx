@@ -1,5 +1,4 @@
 import css from "./Forecast.module.css";
-import {GlassCard} from "@mawtech/glass-ui";
 import {GlowCapture, Glow} from "@codaworks/react-glow";
 import type {ForecastItem} from "../../types/WeatherData";
 import {getWeatherIcon} from "../../helpers/weatherIcon.tsx";
@@ -20,7 +19,7 @@ const formatDate = (dateString: string) =>{
             <h3 className={css.forecastTitle}>Прогноз на 5 дней</h3>
             <GlowCapture>
                 <Glow>
-                <GlassCard className={css.glassCard}>
+                <div className={css.div}>
                 <div className = {css.forecastContainer}>
                     {forecastData.map((day) => (
                         <div key={day.dt} className={css.dayItem}>
@@ -33,7 +32,7 @@ const formatDate = (dateString: string) =>{
                         </div>
                     ))}
                 </div>
-            </GlassCard>
+            </div>
                 </Glow>
 
             </GlowCapture>
