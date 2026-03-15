@@ -8,6 +8,10 @@ import { getWeatherIcon } from "../../helpers/weatherIcon.tsx";
 interface WeatherDataProps {
   data: {
     name: string;
+    image?: {
+      imageUrl: string;
+      imageAlt: string;
+    }
     main: {
       temp: number;
       humidity: number;
@@ -28,6 +32,11 @@ export default function WeatherData({ data }: WeatherDataProps) {
   return (
     <GlowCapture>
       <div className={css.weatherDataContainer}>
+        <div className={css.cityImg}>
+          <Glow color={"#FFF"}>
+
+          </Glow>
+        </div>
         <div className={css.tempBlock}>
           <Glow color="#fff">
             <div className={`${css.prop} ${css.tempBlockCard} `}>
