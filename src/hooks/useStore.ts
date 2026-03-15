@@ -96,6 +96,8 @@ export const useStore = create<Store>()(
                 }
             }
         }),
-        {name: "weather-app-storage"}
+        {name: "weather-app-storage"},
+
+
     )
 )

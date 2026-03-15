@@ -13,14 +13,19 @@ export default function VillageSearchField() {
             setVillageName(savedVillageName);
         }
     }, []);
+    useEffect(() => {
+        if (!villageName) return
+        const handler = setTimeout(() => {
+            localStorage.setItem("villageName", villageName)
+
+            fetchWeather(villageName)
+        }, 500);
+        return () => clearTimeout(handler)
+    }, [fetchWeather, villageName]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setVillageName(e.target.value);
-        localStorage.setItem("villageName", e.target.value);
-        setTimeout(() => {
-            fetchWeather(e.target.value);
-        }, 500);
-    };
+    }
 
 
     return (
@@ -35,6 +40,6 @@ export default function VillageSearchField() {
 
             />
         </div>
-    );
-
+    )
 }
+
