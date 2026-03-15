@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { useStore } from "../../hooks/useStore";
 import '@mawtech/glass-ui/styles.css';
 import Forecast from "../Forecast/Forecast.tsx";
+import CityImage from "../CityImage/CityImage.tsx";
 
 export default function App() {
   const {
@@ -15,7 +16,8 @@ export default function App() {
     loading,
     cityFound,
     forecastData,
-    foreCast
+    foreCast,
+    cityImage
   } = useStore();
 
   useEffect(() => {
@@ -29,30 +31,33 @@ export default function App() {
   }, [cityFound]);
 
   useEffect(() => {
-        if (weatherData && weatherData.name) {
-            foreCast(weatherData.name);
-        }
-    }, [weatherData, foreCast]);
+    if (weatherData && weatherData.name) {
+      foreCast(weatherData.name);
+    }
+  }, [weatherData, foreCast]);
 
   return (
-      <div className={css.App}>
+    <div className={css.App}>
+      <VillageSearchField />
 
+      {weatherData && (
+        <h2 className={css.appHeader}>Погода в городе: {weatherData.name}</h2>
+      )}
 
-        <VillageSearchField/>
+      {loading && (
+        <div className={css.loader}>
+          <MoonLoader size={50} color="#ffffff" />
+        </div>
+      )}
 
-        {weatherData && (
-            <h2 className={css.appHeader}>Погода в городе: {weatherData.name}</h2>
+      <div className={css.dataContainer}>
+        {cityImage && cityImage.imageUrl && !loading && (
+          <CityImage imageUrl={cityImage.imageUrl} imageAlt={cityImage.imageAlt} />
         )}
-
-        {loading && (
-            <div className={css.loader}>
-              <MoonLoader size={50} color="#ffffff" />
-            </div>
-        )}
-
-
         {weatherData && !loading && <WeatherData data={weatherData} />}
-        {forecastData && !loading && <Forecast forecastData={forecastData} />}
       </div>
+      
+      {forecastData && !loading && <Forecast forecastData={forecastData} />}
+    </div>
   );
 }

@@ -1,0 +1,25 @@
+.cardWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.imageContainer {
+  padding: 10px;
+  border-radius: 20px;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(10px) saturate(50%);
+  border: 1px solid rgba(211, 211, 211, 0.3);
+  max-width: 400px;
+  width: 100%;
+}
+
+.cityImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 20px;
+}

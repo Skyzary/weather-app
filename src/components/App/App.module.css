@@ -15,3 +15,18 @@
   overflow: hidden;
   padding: 20px;
 }
+
+.dataContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+
+@media (max-width: 768px) {
+  .dataContainer {
+    flex-direction: column;
+  }
+}

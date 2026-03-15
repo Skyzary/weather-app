@@ -12,11 +12,16 @@ interface Store {
     cityFound: boolean;
     fetchWeather: (city: string) => Promise<void>;
     foreCast: (city: string) => Promise<void>;
+    fetchImage: (city: string) => Promise<void>;
+    cityImage?: {
+        imageUrl: string;
+        imageAlt: string;
+    };
 }
 
 export const useStore = create<Store>()(
     persist(
-        (set) => ({
+        (set, get) => ({ // Добавляем get, чтобы иметь доступ к другим actions
             city: "",
             setCity: (city) => set({ city }),
             weatherData: null,
@@ -30,7 +35,6 @@ export const useStore = create<Store>()(
                     q: city,
                     limit: 1,
                     appid: import.meta.env.VITE_API_KEY,
-
                 };
                 try {
                     const geo = await axios.get('https://api.openweathermap.org/geo/1.0/direct', {params})
@@ -60,6 +64,8 @@ export const useStore = create<Store>()(
                         weatherData: weatherResponse.data,
                         cityFound: true
                     })
+                    // ВЫЗЫВАЕМ ЗАПРОС НА ИЗОБРАЖЕНИЕ ПОСЛЕ УСПЕШНОГО ПОЛУЧЕНИЯ ПОГОДЫ
+                    get().fetchImage(cityName);
                 } catch (error) {
                     set({
                         loading: false,
@@ -70,6 +76,26 @@ export const useStore = create<Store>()(
                     console.error("Error fetching weather data:", error);
                 }
             },
+            fetchImage: async (city: string): Promise<void> => {
+                if (!city) return;
+                const baseUrl = "https://api.unsplash.com/search/photos";
+                try{
+                    const response = await axios.get(baseUrl, {params: {
+                        query: city,
+                        client_id: import.meta.env.VITE_UNSPLASH_ACCESS_KEY,
+                        per_page: 1,
+                        orientation: "landscape",
+                    }})
+                    const imageUrl =  response.data.results[0]?.urls?.regular || "";
+                    const imageAlt = response.data.results[0]?.alt_description || city;
+                    set({cityImage: {imageUrl, imageAlt}})
+                }
+                catch (error) {
+                    console.error("Error fetching image from Unsplash:", error);
+                    set({cityImage: undefined})
+                }
+            },
+
             foreCast: async (city: string): Promise<void> => {
                 if (!city) return;
                 set({loading: true})
@@ -97,7 +123,5 @@ export const useStore = create<Store>()(
             }
         }),
         {name: "weather-app-storage"},
-
-
     )
 )
