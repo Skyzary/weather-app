@@ -1,0 +1,67 @@
+.skeletonContainer {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.skeletonCard {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 16px;
+    width: 150px;
+    height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.skeletonDate {
+    height: 20px;
+    width: 80%;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+.skeletonIcon {
+    height: 64px;
+    width: 64px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+}
+
+.skeletonTemp {
+    height: 24px;
+    width: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+.skeletonDesc {
+    height: 18px;
+    width: 90%;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: .5;
+    }
+}
+
+.forecastSection {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.forecastTitle {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #fff;
+}
