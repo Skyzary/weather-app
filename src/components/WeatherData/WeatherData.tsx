@@ -1,9 +1,11 @@
 import css from "./WeatherData.module.css";
 import { FaTemperatureHigh, FaWind, FaTachometerAlt } from "react-icons/fa";
 import { WiHumidity } from "react-icons/wi";
-
 import { Glow, GlowCapture } from "@codaworks/react-glow";
 import { getWeatherIcon } from "../../helpers/weatherIcon.tsx";
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+
 
 interface WeatherDataProps {
   data: {
@@ -68,9 +70,19 @@ export default function WeatherData({ data }: WeatherDataProps) {
         <div className={css.humidity}>
           <Glow color="#fff">
             <div className={`${css.prop} ${css.humidityCard} `}>
-              <WiHumidity size={64} />
-              <p>Влажность</p>
-              <span>{data.main.humidity}%</span>
+
+                <WiHumidity size={64} className={css.humidityIcon}/>
+                <p>Влажность</p>
+
+              <div className={css.circleWrapper}>
+                <CircularProgressbar
+                  className={css.humidityCircle}
+                  value={data.main.humidity}
+                  text={`${data.main.humidity}%`}
+                  strokeWidth={8}
+                  styles={buildStyles({trailColor: "rgba(255, 255, 255, 0.2)", pathColor: "#fff", textColor: "#fff", textSize: "18px"})}
+              />
+              </div>
             </div>
           </Glow>
         </div>

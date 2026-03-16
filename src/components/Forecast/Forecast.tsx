@@ -19,7 +19,6 @@ const formatDate = (dateString: string) =>{
             <h3 className={css.forecastTitle}>Прогноз на 5 дней</h3>
             <GlowCapture>
                 <Glow>
-                <div className={css.div}>
                 <div className = {css.forecastContainer}>
                     {forecastData.map((day) => (
                         <div key={day.dt} className={css.dayItem}>
@@ -32,7 +31,6 @@ const formatDate = (dateString: string) =>{
                         </div>
                     ))}
                 </div>
-            </div>
                 </Glow>
 
             </GlowCapture>
