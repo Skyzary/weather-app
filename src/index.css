@@ -3,12 +3,12 @@
     color: white;
 }
 body {
+  font-family: Montserrat, sans-serif;
   background-image: url("./public/bg.png");
   background-color: #000000;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  font-family: Arial, sans-serif;
   min-height: 100vh;
   margin: 0;
 }

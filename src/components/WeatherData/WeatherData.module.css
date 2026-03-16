@@ -9,6 +9,8 @@
 
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   color: #ffffff;
+  text-shadow:  0 4px 8px rgba(0, 0, 0, 0.5);
+;
 }
 
 .prop {
@@ -89,26 +91,33 @@
   border: 1px solid rgba(211, 211, 211, 0.3);
   width: 200px;
   min-height: 200px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
-@media (max-width: 768px) {
-  .weatherDataContainer {
-    flex-direction: column;
-    align-items: center;
-  }
+.humidityCard{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.humidityCard p{
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin: 0;
+}
+.circleWrapper {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.humidityCircle{
+  width: 100%;
+  height: 100%;
 
-  .tempBlockCard,
-  .windSpeedCard,
-  .pressureCard,
-  .humidityCard {
-    width: 300px; /* Растягиваем карточки на всю доступную ширину */
-    max-width: 350px; /* Но не делаем их слишком широкими */
-  }
-
-  .tempAndDesc {
-    flex-direction: row;
-    gap: 24px;
-  }
 }
 
 .tempBlock > div,
@@ -119,5 +128,43 @@
 }
 
 .tempBlockCard svg {
-  margin-bottom: 5px;
+  margin-right: -12px;
 }
+.prop svg,
+.prop svg,
+.prop svg,
+.prop svg  {
+  filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.5));
+}
+
+
+
+
+@media (max-width: 768px) {
+  .weatherDataContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+  .humidityCard{
+    justify-content: space-around;
+  }
+  .circleWrapper{
+    width: 100px;
+    height: 100px;
+  }
+
+  .tempBlockCard,
+  .windSpeedCard,
+  .pressureCard,
+  .humidityCard {
+    width: 300px;
+    max-width: 350px;
+  }
+
+  .tempAndDesc {
+    flex-direction: row;
+    gap: 24px;
+  }
+}
+
+
