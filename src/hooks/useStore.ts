@@ -78,16 +78,29 @@ export const useStore = create<Store>()(
             fetchImage: async (city: string): Promise<void> => {
                 if (!city) return;
                 const baseUrl = "https://api.unsplash.com/search/photos";
+
                 try{
-                    const response = await axios.get(baseUrl, {params: {
+                    const response = await axios.get(`${baseUrl}`, {params: {
                         query: city,
                         client_id: import.meta.env.VITE_UNSPLASH_ACCESS_KEY,
                         per_page: 1,
                         orientation: "landscape",
                     }})
-                    const imageUrl =  response.data.results[0]?.urls?.regular || "";
-                    const imageAlt = response.data.results[0]?.alt_description || city;
-                    set({cityImage: {imageUrl, imageAlt}})
+                    const result = response.data.results[0]
+                    if (result){
+                        const optimizeUrl = new URL(result.urls.raw)
+                        optimizeUrl.searchParams.set("fm", "avif")
+                        optimizeUrl.searchParams.set("w", "600")
+                        optimizeUrl.searchParams.set("h", "400")
+                        optimizeUrl.searchParams.set("fit", "crop")
+                        optimizeUrl.searchParams.set("q", "50")
+                        set({cityImage: {
+                                imageUrl: optimizeUrl.toString(),
+                                imageAlt: result.alt_description
+                        }})
+                    } else {
+                        set({cityImage: undefined})
+                    }
                 }
                 catch (error) {
                     console.error("Error fetching image from Unsplash:", error);
