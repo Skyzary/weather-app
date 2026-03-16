@@ -64,7 +64,6 @@ export const useStore = create<Store>()(
                         weatherData: weatherResponse.data,
                         cityFound: true
                     })
-                    // ВЫЗЫВАЕМ ЗАПРОС НА ИЗОБРАЖЕНИЕ ПОСЛЕ УСПЕШНОГО ПОЛУЧЕНИЯ ПОГОДЫ
                     get().fetchImage(cityName);
                 } catch (error) {
                     set({
