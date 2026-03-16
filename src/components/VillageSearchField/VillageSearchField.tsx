@@ -29,19 +29,22 @@ export default function VillageSearchField() {
 
 
     return (
-        <div className={css.searchBox}>
-            <CiSearch className={css.searchIcon} size={24}/>
-            <label>
-                <input
-                className={css.searchField}
-                type="text"
-                value={villageName}
-                onChange={(e) => handleInputChange(e)}
-                placeholder="Введите название города или деревни"
+        <header>
+            <h1 className={css.title}>Weather App</h1>
+            <div className={css.searchBox}>
+                <CiSearch className={css.searchIcon} size={24}/>
+                <label>
+                    <input
+                        className={css.searchField}
+                        type="text"
+                        value={villageName}
+                        onChange={(e) => handleInputChange(e)}
+                        placeholder="Введите название города или деревни"
 
-            />
-            </label>
-        </div>
+                    />
+                </label>
+            </div>
+        </header>
     )
 }
 
