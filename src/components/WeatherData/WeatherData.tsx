@@ -44,7 +44,7 @@ export default function WeatherData({ data }: WeatherDataProps) {
             <div className={`${css.prop} ${css.tempBlockCard} `}>
               <div className={css.tempAndDesc}>
                 <div className={css.tempDetails}>
-                  <FaTemperatureHigh size={48} />
+                  <FaTemperatureHigh size={48} className={css.tempIcon}/>
                   <p>Температура</p>
                   <div>
                     <span>{Math.round(data.main.temp)}°C</span>
