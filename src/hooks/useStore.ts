@@ -21,7 +21,7 @@ interface Store {
 
 export const useStore = create<Store>()(
     persist(
-        (set, get) => ({ // Добавляем get, чтобы иметь доступ к другим actions
+        (set, get) => ({
             city: "",
             setCity: (city) => set({ city }),
             weatherData: null,

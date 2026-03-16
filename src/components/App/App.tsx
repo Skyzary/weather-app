@@ -1,6 +1,5 @@
 import VillageSearchField from "../VillageSearchField/VillageSearchField";
 import WeatherData from "../WeatherData/WeatherData";
-import { MoonLoader } from "react-spinners";
 import css from "./App.module.css";
 import "../../index.css";
 import IziToast from "izitoast";
@@ -9,6 +8,7 @@ import { useStore } from "../../hooks/useStore";
 import '@mawtech/glass-ui/styles.css';
 import Forecast from "../Forecast/Forecast.tsx";
 import CityImage from "../CityImage/CityImage.tsx";
+import ForecastSkeleton from "../Forecast/ForecastSkeleton.tsx";
 
 export default function App() {
   const {
@@ -44,11 +44,7 @@ export default function App() {
         <h2 className={css.appHeader}>Погода в городе: {weatherData.name}</h2>
       )}
 
-      {loading && (
-        <div className={css.loader}>
-          <MoonLoader size={50} color="#ffffff" />
-        </div>
-      )}
+
 
       <div className={css.dataContainer}>
         {cityImage && cityImage.imageUrl && !loading && (
@@ -57,6 +53,7 @@ export default function App() {
         {weatherData && !loading && <WeatherData data={weatherData} />}
       </div>
       
+      {loading && <ForecastSkeleton />}
       {forecastData && !loading && <Forecast forecastData={forecastData} />}
     </div>
   );
