@@ -31,7 +31,8 @@ export default function VillageSearchField() {
     return (
         <div className={css.searchBox}>
             <CiSearch className={css.searchIcon} size={24}/>
-            <input
+            <label>
+                <input
                 className={css.searchField}
                 type="text"
                 value={villageName}
@@ -39,6 +40,7 @@ export default function VillageSearchField() {
                 placeholder="Введите название города или деревни"
 
             />
+            </label>
         </div>
     )
 }
