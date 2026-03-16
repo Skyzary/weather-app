@@ -1,73 +1,73 @@
-# React + TypeScript + Vite
+# Weather App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a modern weather application that provides real-time weather information for any city. The application is built with a focus on a clean, intuitive user interface and a robust, scalable architecture.
 
-Currently, two official plugins are available:
+##  Screenshots
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+![Weather App Screenshot](https://imgur.com/a/QOeyQ3H)
 
-## React Compiler
+## Live Demo
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+You can view a live demo of the application hosted on Vercel: [https://weather-app-nine-bay-52.vercel.app/](https://weather-app-nine-bay-52.vercel.app/)
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+*   **Current Weather:** Get the current temperature, humidity, wind speed, and weather conditions for any city.
+*   **Search:** Easily search for any city in the world.
+*   **Responsive Design:** The application is fully responsive and works on all devices.
+*   **Modern UI:** A beautiful and intuitive user interface with glassmorphism effects.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Tech Stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+The application is built using the following technologies:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+| Technology | Description |
+| --- | --- |
+| **React** | A JavaScript library for building user interfaces. |
+| **Vite** | A next-generation frontend tooling that provides a faster and leaner development experience. |
+| **TypeScript** | A typed superset of JavaScript that compiles to plain JavaScript. |
+| **Zustand** | A small, fast, and scalable state-management solution for React. |
+| **Axios** | A promise-based HTTP client for the browser and Node.js. |
+| **React Icons** | A library that provides a set of popular icons for React applications. |
+| **React Circular Progressbar** | A circular progressbar component for React. |
+| **React Spinners** | A collection of loading spinner components for React. |
+| **@codaworks/react-glow** | A React component for creating a glow effect. |
+| **@mawtech/glass-ui** | A React component library for creating glassmorphism UI. |
+| **ESLint** | A pluggable and configurable linter tool for identifying and reporting on patterns in JavaScript. |
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+To get a local copy up and running, follow these simple steps.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Prerequisites
+
+*   Node.js (v18 or higher)
+*   npm
+
+### Installation
+
+1.  Clone the repo
+    ```sh
+    git clone https://github.com/your_username/weather-app.git
+    ```
+2.  Install NPM packages
+    ```sh
+    npm install
+    ```
+3.  Start the development server
+    ```sh
+    npm run dev
+    ```
+
+## Available Scripts
+
+In the project directory, you can run:
+
+*   `npm run dev`: Runs the app in the development mode.
+*   `npm run build`: Builds the app for production to the `dist` folder.
+*   `npm run lint`: Lints the project files.
+*   `npm run preview`: Serves the production build locally.
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
