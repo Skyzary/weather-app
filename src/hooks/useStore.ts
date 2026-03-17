@@ -1,7 +1,8 @@
-import {create} from 'zustand'
-import {persist} from 'zustand/middleware'
-import type {CurrentWeatherData, ForecastItem} from "../types/WeatherData";
-import axios from "axios";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import type { CurrentWeatherData, ForecastItem } from "../types/WeatherData";
+import { weatherService } from '../services/weatherService';
+import { imageService } from '../services/imageService';
 
 interface Store {
     city: string;
@@ -28,112 +29,69 @@ export const useStore = create<Store>()(
             forecastData: null,
             loading: false,
             cityFound: true,
-            fetchWeather: async (city) => {
+
+            fetchWeather: async (city: string) => {
                 if (!city) return;
-                set({loading: true, cityFound: true })
-                const params = {
-                    q: city,
-                    limit: 1,
-                    appid: import.meta.env.VITE_API_KEY,
-                };
+                set({ loading: true, cityFound: true });
+
                 try {
-                    const geo = await axios.get('https://api.openweathermap.org/geo/1.0/direct', {params})
-                    if(!geo.data.length) {
-                         set({
+                    const coords = await weatherService.getGeo(city);
+
+                    if (!coords) {
+                        set({
                             loading: false,
                             cityFound: false,
                             weatherData: null,
                             city: ""
-                        })
+                        });
                         return;
                     }
-                    const {lat, lon, localNames} = await geo.data[0]
-                    const cityName = localNames?.ru || geo.data[0].name
-                    const weatherResponse = await axios.get('https://api.openweathermap.org/data/2.5/weather', {
-                        params: {
-                            lat,
-                            lon,
-                            appid: import.meta.env.VITE_API_KEY,
-                            units: "metric",
-                            lang: "ru",
-                        }
-                    })
+
+                    const weatherData = await weatherService.fetchWeather(coords);
+
                     set({
-                        city: cityName,
+                        city: coords.name,
                         loading: false,
-                        weatherData: weatherResponse.data,
+                        weatherData,
                         cityFound: true
-                    })
-                    get().fetchImage(cityName);
+                    });
+
+                    get().fetchImage(coords.name);
+                    get().foreCast(coords.name);
                 } catch (error) {
                     set({
                         loading: false,
                         cityFound: false,
                         weatherData: null,
                         city: ""
-                    })
-                    console.error("Error fetching weather data:", error);
-                }
-            },
-            fetchImage: async (city: string): Promise<void> => {
-                if (!city) return;
-                const baseUrl = "https://api.unsplash.com/search/photos";
-
-                try{
-                    const response = await axios.get(`${baseUrl}`, {params: {
-                        query: city,
-                        client_id: import.meta.env.VITE_UNSPLASH_ACCESS_KEY,
-                        per_page: 1,
-                        orientation: "landscape",
-                    }})
-                    const result = response.data.results[0]
-                    if (result){
-                        const optimizeUrl = new URL(result.urls.raw)
-                        optimizeUrl.searchParams.set("fm", "avif")
-                        optimizeUrl.searchParams.set("w", "600")
-                        optimizeUrl.searchParams.set("h", "400")
-                        optimizeUrl.searchParams.set("fit", "crop")
-                        optimizeUrl.searchParams.set("q", "50")
-                        set({cityImage: {
-                                imageUrl: optimizeUrl.toString(),
-                                imageAlt: result.alt_description
-                        }})
-                    } else {
-                        set({cityImage: undefined})
-                    }
-                }
-                catch (error) {
-                    console.error("Error fetching image from Unsplash:", error);
-                    set({cityImage: undefined})
+                    });
+                    console.error("Error in fetchWeather flow:", error);
                 }
             },
 
-            foreCast: async (city: string): Promise<void> => {
-                if (!city) return;
-                set({loading: true})
+            fetchImage: async (city: string) => {
                 try {
-                    const forecastResp = await axios.get('https://api.openweathermap.org/data/2.5/forecast', {
-                        params: {
-                            q: city,
-                            units: "metric",
-                            appid: import.meta.env.VITE_API_KEY,
-                            lang: "ru"
-                        }
-                    });
-                    const forecastData = forecastResp.data
-                    const dailyData: ForecastItem[] = forecastData.list.filter((reading: ForecastItem) => {
-                        return reading.dt_txt.includes('12:00:00')
-                    });
-                    set({
-                        loading: false,
-                        forecastData: dailyData
-                    })
+                    const imageData = await imageService.getCityImage(city);
+                    set({ cityImage: imageData || undefined });
                 } catch (error) {
-                    console.error("Error fetching forecast data:", error);
-                    set({ loading: false });
+                    console.error("Error fetching image:", error);
+                    set({ cityImage: undefined });
+                }
+            },
+
+            foreCast: async (city: string) => {
+                if (!city) return;
+                try {
+                    const coords = await weatherService.getGeo(city);
+                    if (coords) {
+                        const dailyData = await weatherService.getForecast(coords);
+                        set({ forecastData: dailyData || null });
+                    }
+                } catch (error) {
+                    console.error("Error fetching forecast:", error);
                 }
             }
         }),
-        {name: "weather-app-storage"},
+        { name: "weather-app-storage" }
     )
-)
+);
