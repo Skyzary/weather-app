@@ -16,7 +16,7 @@ export default function CityImage({ imageUrl, imageAlt }: CityImageProps) {
       <GlowCapture>
         <Glow color="hsl(200 100% 50% / .5)">
           <div className={css.imageContainer}>
-            <img src={imageUrl} alt={imageAlt} className={css.cityImage} />
+            <img src={imageUrl} alt={imageAlt} className={css.cityImage} loading={"lazy"} />
           </div>
         </Glow>
       </GlowCapture>
