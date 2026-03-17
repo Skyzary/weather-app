@@ -42,7 +42,6 @@ export const useStore = create<Store>()(
                             loading: false,
                             cityFound: false,
                             weatherData: null,
-                            city: "",
                             forecastData: null,
                             cityImage: undefined
                         });
@@ -52,7 +51,6 @@ export const useStore = create<Store>()(
                     const weatherData = await weatherService.fetchWeather(coords);
 
                     set({
-                        city: coords.name,
                         loading: false,
                         weatherData,
                         cityFound: true
@@ -65,7 +63,6 @@ export const useStore = create<Store>()(
                         loading: false,
                         cityFound: false,
                         weatherData: null,
-                        city: ""
                     });
                     console.error("Error in fetchWeather flow:", error);
                 }
