@@ -1,31 +1,27 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import css from "./VillageSearchField.module.css";
 import { CiSearch } from "react-icons/ci";
-import {useStore} from "../../hooks/useStore.ts";
+import { useStore } from "../../hooks/useStore.ts";
 import * as React from "react";
 
-
 export default function VillageSearchField() {
-    const fetchWeather = useStore(state => state.fetchWeather)
-    const [villageName, setVillageName] = useState(() => {
-        const savedVillageName = localStorage.getItem("villageName");
-        return savedVillageName || "";
-    });
+    const fetchWeather = useStore(state => state.fetchWeather);
+    const city = useStore(state => state.city);
+    const setCity = useStore(state => state.setCity);
+
     useEffect(() => {
-        if (!villageName.trim()){
-            localStorage.setItem("villageName", "")
-            return
+        if (!city.trim()){
+            return;
         }
         const handler = setTimeout(() => {
-            fetchWeather(villageName)
+            fetchWeather(city);
         }, 500);
-        return () => clearTimeout(handler)
-    }, [fetchWeather, villageName]);
+        return () => clearTimeout(handler);
+    }, [fetchWeather, city]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setVillageName(e.target.value);
+        setCity(e.target.value);
     }
-
 
     return (
         <header>
@@ -36,14 +32,12 @@ export default function VillageSearchField() {
                     <input
                         className={css.searchField}
                         type="text"
-                        value={villageName}
+                        value={city}
                         onChange={handleInputChange}
                         placeholder="Введите название города или деревни"
-
                     />
                 </label>
             </div>
         </header>
     )
 }
-

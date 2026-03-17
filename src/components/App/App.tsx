@@ -11,14 +11,12 @@ import CityImage from "../CityImage/CityImage.tsx";
 import ForecastSkeleton from "../Forecast/ForecastSkeleton.tsx";
 
 export default function App() {
-  const {
-    weatherData,
-    loading,
-    cityFound,
-    forecastData,
-    foreCast,
-    cityImage
-  } = useStore();
+  const weatherData = useStore((state) => state.weatherData);
+  const loading = useStore((state) => state.loading);
+  const cityFound = useStore((state) => state.cityFound);
+  const forecastData = useStore((state) => state.forecastData);
+  const foreCast = useStore((state) => state.foreCast);
+  const cityImage = useStore((state) => state.cityImage);
 
   useEffect(() => {
     if (!cityFound) {
