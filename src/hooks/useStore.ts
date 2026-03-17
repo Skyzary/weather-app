@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { CurrentWeatherData, ForecastItem } from "../types/WeatherData";
+import type { CurrentWeatherData, ForecastItem, ForecastData } from "../types/WeatherData";
 import { weatherService } from '../services/weatherService';
 import { imageService } from '../services/imageService';
 
@@ -84,8 +84,15 @@ export const useStore = create<Store>()(
                 try {
                     const coords = await weatherService.getGeo(city);
                     if (coords) {
-                        const dailyData = await weatherService.getForecast(coords);
-                        set({ forecastData: dailyData || null });
+                        const forecastResponse = await weatherService.getForecast(coords) as ForecastData | undefined;
+                        if (forecastResponse && forecastResponse.list) {
+                            const dailyData: ForecastItem[] = forecastResponse.list.filter((reading: ForecastItem) => {
+                                return reading.dt_txt.includes('12:00:00');
+                            });
+                            set({ forecastData: dailyData });
+                        } else {
+                            set({ forecastData: null });
+                        }
                     }
                 } catch (error) {
                     console.error("Error fetching forecast:", error);

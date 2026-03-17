@@ -4,6 +4,10 @@ const BASE_URL = "https://api.unsplash.com/search/photos";
 const ACCESS_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
 
 export const imageService = {
+    /**
+     * @Param city - village name for search
+     * @returns - {imageUrl, imageAlt} or undefined if error
+     */
     getCityImage: async (city: string) => {
         if (!city) return undefined;
 
