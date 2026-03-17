@@ -1,19 +1,23 @@
 import axios from "axios";
 
 const BASE_URL = "https://api.unsplash.com/search/photos";
-const ACCESS_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
+const accessKey = import.meta.env.VITE_UNSPLASH_ACCESS_KEY
+
 
 export const imageService = {
     /**
      * @Param city - village name for search
      * @returns - {imageUrl, imageAlt} or undefined if error
      */
+
     getCityImage: async (city: string) => {
         if (!city) return undefined;
+        if (!accessKey || !accessKey.length ) throw new Error('API key is not defined')
+
 
         const params = {
             query: city,
-            client_id: ACCESS_KEY,
+            client_id: accessKey,
             per_page: 1,
             orientation: "landscape",
         };
@@ -40,4 +44,4 @@ export const imageService = {
             return undefined;
         }
     }
-};
+}

@@ -42,7 +42,9 @@ export const useStore = create<Store>()(
                             loading: false,
                             cityFound: false,
                             weatherData: null,
-                            city: ""
+                            city: "",
+                            forecastData: null,
+                            cityImage: undefined
                         });
                         return;
                     }
@@ -70,6 +72,7 @@ export const useStore = create<Store>()(
             },
 
             fetchImage: async (city: string) => {
+                set({ cityImage: undefined })
                 try {
                     const imageData = await imageService.getCityImage(city);
                     set({ cityImage: imageData || undefined });
