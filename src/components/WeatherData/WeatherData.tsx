@@ -56,7 +56,7 @@ export default function WeatherData({ data }: WeatherDataProps) {
                 <div className={css.descriptionDetails}>
                   {getWeatherIcon(weather?.icon)}
                   <p>Описание</p>
-                  <span>{data.weather[0]?.description || "Нет описания"}</span>
+                  <span>{weather?.description || "Нет описания"}</span>
                 </div>
               </div>
             </div>
