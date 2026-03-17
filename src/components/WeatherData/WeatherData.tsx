@@ -10,10 +10,6 @@ import 'react-circular-progressbar/dist/styles.css';
 interface WeatherDataProps {
   data: {
     name: string;
-    image?: {
-      imageUrl: string;
-      imageAlt: string;
-    }
     main: {
       temp: number;
       humidity: number;
