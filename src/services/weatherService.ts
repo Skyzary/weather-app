@@ -42,24 +42,8 @@ export const  weatherService = {
         /**
          * @param coords - {lat, lon}
          * @returns - CurrentWeatherData */
-        if (!coords) {
-            return {
-                name: "",
-                main: {
-                    temp: 0,
-                    humidity: 0,
-                    feels_like: 0,
-                    pressure: 0
-                },
-                weather: [{
-                    description: "",
-                    icon: ""
-                }],
-                wind: {
-                    speed: 0,
-                    deg: 0
-                }
-            }
+        if (!coords || !Number.isFinite(coords.lat) || !Number.isFinite(coords.lon)){
+            throw new Error('Invalid coordinates')
         }
         if (!accessKey || !accessKey.length) throw new Error('API key is not defined')
 

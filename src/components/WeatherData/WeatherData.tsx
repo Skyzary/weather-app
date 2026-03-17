@@ -31,14 +31,10 @@ interface WeatherDataProps {
 }
 
 export default function WeatherData({ data }: WeatherDataProps) {
+  const weather = data.weather?.[0];
   return (
     <GlowCapture>
       <div className={css.weatherDataContainer}>
-        <div className={css.cityImg}>
-          <Glow color={"#FFF"}>
-
-          </Glow>
-        </div>
         <div className={css.tempBlock}>
           <Glow color="#fff">
             <div className={`${css.prop} ${css.tempBlockCard} `}>
@@ -49,8 +45,8 @@ export default function WeatherData({ data }: WeatherDataProps) {
                   <div>
                     <span>{Math.round(data.main.temp)}°C</span>
                     <small>
-                      Ощущается как:{" "}
-                      {data.main.feels_like
+                      Ощущается как:
+                      {data.main.feels_like != null
                         ? Math.round(data.main.feels_like)
                         : "--"}
                       °C
@@ -58,9 +54,9 @@ export default function WeatherData({ data }: WeatherDataProps) {
                   </div>
                 </div>
                 <div className={css.descriptionDetails}>
-                  {getWeatherIcon(data.weather[0]?.icon)}
+                  {getWeatherIcon(weather?.icon)}
                   <p>Описание</p>
-                  <span>{data.weather[0]?.description}</span>
+                  <span>{data.weather[0]?.description || "Нет описания"}</span>
                 </div>
               </div>
             </div>
@@ -92,7 +88,7 @@ export default function WeatherData({ data }: WeatherDataProps) {
               <FaWind size={48} />
               <p>Скорость ветра</p>
               <span>
-                {data.wind?.speed ? `${data.wind.speed} м/с` : "Недоступно"}
+                {data.wind?.speed != null ? `${data.wind.speed} м/с` : "Недоступно"}
               </span>
             </div>
           </Glow>
@@ -104,7 +100,7 @@ export default function WeatherData({ data }: WeatherDataProps) {
               <FaTachometerAlt size={48} />
               <p>Давление</p>
               <span>
-                {data.main.pressure
+                {data.main.pressure != null
                   ? `${data.main.pressure} гПа`
                   : "Недоступно"}
               </span>

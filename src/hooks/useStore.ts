@@ -32,7 +32,12 @@ export const useStore = create<Store>()(
 
             fetchWeather: async (city: string) => {
                 if (!city) return;
-                set({ loading: true, cityFound: true });
+                set({
+                    loading: true,
+                    cityFound: true,
+                    forecastData: null,
+                    cityImage: undefined
+                });
 
                 try {
                     const coords = await weatherService.getGeo(city);
