@@ -15,7 +15,6 @@ export default function App() {
   const loading = useStore((state) => state.loading);
   const cityFound = useStore((state) => state.cityFound);
   const forecastData = useStore((state) => state.forecastData);
-  const foreCast = useStore((state) => state.foreCast);
   const cityImage = useStore((state) => state.cityImage);
 
   useEffect(() => {
@@ -28,11 +27,6 @@ export default function App() {
     }
   }, [cityFound]);
 
-  useEffect(() => {
-    if (weatherData && weatherData.name) {
-      foreCast(weatherData.name);
-    }
-  }, [weatherData, foreCast]);
 
   return (
     <div className={css.App}>
