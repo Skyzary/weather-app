@@ -39,14 +39,12 @@ export default function App() {
 
 
       <div className={css.dataContainer}>
-        {cityImage && cityImage.imageUrl && !loading && (
-          <CityImage imageUrl={cityImage.imageUrl} imageAlt={cityImage.imageAlt} />
-        )}
-        {weatherData && !loading && <WeatherData data={weatherData} />}
+        {cityImage?.imageUrl && <CityImage imageUrl={cityImage.imageUrl} imageAlt={cityImage.imageAlt} />}
+        {weatherData  && <WeatherData data={weatherData} />}
       </div>
       
-      {loading && <ForecastSkeleton />}
-      {forecastData && !loading && <Forecast forecastData={forecastData} />}
+      {loading && !forecastData && <ForecastSkeleton />}
+      {forecastData && <Forecast forecastData={forecastData} />}
     </div>
   );
 }
