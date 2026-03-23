@@ -1,8 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { CurrentWeatherData, ForecastItem, ForecastData } from "../types/WeatherData";
+import type { CurrentWeatherData, ForecastItem, ForecastData, CityCoords } from "../types/WeatherData";
 import { weatherService } from '../services/weatherService';
 import { imageService } from '../services/imageService';
+import iziToast from "izitoast";
 
 interface Store {
     city: string;
@@ -12,7 +13,7 @@ interface Store {
     loading: boolean;
     cityFound: boolean;
     fetchWeather: (city: string) => Promise<void>;
-    foreCast: (city: string) => Promise<void>;
+    foreCast: (coords: CityCoords) => Promise<void>;
     fetchImage: (city: string) => Promise<void>;
     cityImage?: {
         imageUrl: string;
@@ -48,7 +49,6 @@ export const useStore = create<Store>()(
                             cityFound: false,
                             weatherData: null,
                             forecastData: null,
-                            cityImage: undefined
                         });
                         return;
                     }
@@ -61,49 +61,72 @@ export const useStore = create<Store>()(
                         cityFound: true
                     });
 
-                    get().fetchImage(coords.name);
-                    get().foreCast(coords.name);
+                    await get().fetchImage(coords.name);
+                    await get().foreCast(coords);
                 } catch (error) {
-                    set({
-                        loading: false,
-                        cityFound: false,
-                        weatherData: null,
-                    });
-                    console.error("Error in fetchWeather flow:", error);
+                    set({ loading: false, cityFound: false, weatherData: null });
+                    if (error instanceof Error) {
+                        iziToast.error({
+                            title: "Ошибка",
+                            message: error.message,
+                            position: "topCenter",
+                            timeout: 5000
+                        });
+                    } else {
+                        console.log('Promise was rejected');
+                    }
                 }
             },
 
             fetchImage: async (city: string) => {
-                set({ cityImage: undefined })
+                set({ cityImage: undefined });
                 try {
                     const imageData = await imageService.getCityImage(city);
                     set({ cityImage: imageData || undefined });
                 } catch (error) {
-                    console.error("Error fetching image:", error);
                     set({ cityImage: undefined });
+                    if (error instanceof Error) {
+                        iziToast.error({
+                            title: "Ошибка изображения",
+                            message: error.message,
+                            position: "topCenter",
+                            timeout: 5000
+                        });
+                    }
                 }
             },
 
-            foreCast: async (city: string) => {
-                if (!city) return;
+            foreCast: async (coords: CityCoords): Promise<void> => {
                 try {
-                    const coords = await weatherService.getGeo(city);
-                    if (coords) {
-                        const forecastResponse = await weatherService.getForecast(coords) as ForecastData | undefined;
-                        if (forecastResponse && forecastResponse.list) {
-                            const dailyData: ForecastItem[] = forecastResponse.list.filter((reading: ForecastItem) => {
-                                return reading.dt_txt.includes('12:00:00');
-                            });
-                            set({ forecastData: dailyData });
-                        } else {
-                            set({ forecastData: null });
-                        }
+                    const forecastResponse = await weatherService.getForecast(coords) as ForecastData | undefined;
+
+                    if (forecastResponse && forecastResponse.list) {
+                        const dailyData: ForecastItem[] = forecastResponse.list.filter((reading: ForecastItem) => {
+                            return reading.dt_txt.includes('12:00:00');
+                        });
+                        set({ forecastData: dailyData });
+                    } else {
+                        set({ forecastData: null });
                     }
                 } catch (error) {
-                    console.error("Error fetching forecast:", error);
+                    if (error instanceof Error) {
+                        iziToast.error({
+                            title: "Ошибка прогноза",
+                            message: error.message,
+                            position: "topCenter",
+                            timeout: 5000
+                        });
+                    }
                 }
             }
         }),
-        { name: "weather-app-storage" }
+        {
+            name: "weather-app-storage",
+            partialize: (state) => ({
+                city: state.city,
+                weatherData: state.weatherData,
+                forecastData: state.forecastData,
+            })
+        }
     )
 );
