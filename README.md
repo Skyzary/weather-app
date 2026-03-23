@@ -60,15 +60,22 @@ This application requires two API keys to function fully:
 
 1.  **Clone the repo**
     ```sh
-    git clone [https://github.com/your_username/weather-app.git](https://github.com/your_username/weather-app.git)
+    git clone https://github.com/your_username/weather-app.git
     cd weather-app
     ```
 
-2.  **Set up environment variables** Create a `.env` file in the root directory and add your keys:
-    ```env
-    VITE_WEATHER_API_KEY=your_weather_key_here
-    VITE_UNSPLASH_ACCESS_KEY=your_unsplash_key_here
+2.  **Set up environment variables**  
+    Copy the example file and fill in your API keys:
+    ```sh
+    cp .env.example .env
     ```
+    Then open `.env` and replace the placeholders with your real keys:
+    ```env
+    VITE_API_KEY=your_openweathermap_api_key_here
+    VITE_UNSPLASH_ACCESS_KEY=your_unsplash_access_key_here
+    ```
+
+    > **Note:** If you use Vercel CLI (`vercel dev`), it will automatically create a `.env.local` file — this is expected and doesn't require manual setup.
 
 3.  **Install NPM packages**
     ```sh

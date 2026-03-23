@@ -10,12 +10,12 @@ export default function VillageSearchField() {
     const setCity = useStore(state => state.setCity);
 
     useEffect(() => {
-        if (!city.trim()){
+        if (!city.trim() || city.length < 2){
             return;
         }
         const handler = setTimeout(() => {
             fetchWeather(city);
-        }, 500);
+        }, 800);
         return () => clearTimeout(handler);
     }, [fetchWeather, city]);
 
