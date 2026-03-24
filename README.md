@@ -1,103 +1,215 @@
-# 🌤️ Weather App
+# ☁️ Skyzary — Weather App
 
-This is a modern weather application that provides real-time weather information for any city. The application is built with a focus on a clean, intuitive user interface and a robust, scalable architecture.
-
-## 📸 Screenshots
+Pet-проект для изучения и закрепления: **React 19**, **TypeScript**, **Zustand**, работа с **REST API** и принципы построения масштабируемой клиентской архитектуры.
 
 ![Weather App Screenshot](https://i.imgur.com/O93lNQT.jpeg)
 
-## 🚀 Live Demo
-
-You can view a live demo of the application hosted on Vercel:  
-[https://weather-app-nine-bay-52.vercel.app/](https://weather-app-nine-bay-52.vercel.app/)
-
-## ✨ Features
-
-* **Current Weather:** Get the current temperature, humidity, wind speed, and weather conditions for any city.
-* **Dynamic Backgrounds:** Beautiful images synced with the weather thanks to Unsplash API.
-* **Search:** Easily search for any city in the world.
-* **Responsive Design:** The application is fully responsive and works on all devices.
-* **Modern UI:** A beautiful interface featuring glow effects and circular progress indicators.
+**Live Demo:** [weather-app-nine-bay-52.vercel.app](https://weather-app-nine-bay-52.vercel.app/)
 
 ---
 
-## 🛠️ Tech Stack
+## Технический стек
 
-The application is built using the following technologies:
-Technology | Description |
+| Технология | Версия | Роль в проекте |
+| :--- | :---: | :--- |
+| React | 19.2 | UI-библиотека, функциональные компоненты + хуки |
+| TypeScript | 5.9 | Статическая типизация в strict-режиме |
+| Vite | 7.2 | Сборщик, HMR, ESBuild для dev, Rollup для production |
+| Zustand | 5.0 | Глобальный стейт-менеджер с `persist` middleware |
+| Axios | 1.13 | HTTP-клиент с поддержкой `AbortController` |
+| CSS Modules | — | Scoped-стили, без глобальных конфликтов |
+| ESLint (Flat Config) | 9.39 | Линтинг с `react-hooks` + `react-refresh` плагинами |
+
+---
+
+## Архитектура проекта
+
+```
+src/
+├── components/          # UI-компоненты (feature-sliced)
+│   ├── App/             # Корневой компонент, компоновка layout
+│   ├── CityImage/       # Фоновое изображение города (Unsplash)
+│   ├── Forecast/        # 5-дневный прогноз + Skeleton-загрузка
+│   ├── VillageSearchField/  # Поле поиска с debounce-логикой
+│   └── WeatherData/     # Карточка текущей погоды
+├── services/            # API-слой (бизнес-логика запросов)
+│   ├── weatherService.ts    # OpenWeatherMap: geo, weather, forecast
+│   └── imageService.ts     # Unsplash: поиск фото по названию города
+├── hooks/
+│   └── useStore.ts      # Zustand store — единый источник данных
+├── types/
+│   └── WeatherData.ts   # TypeScript-интерфейсы для API-ответов
+├── helpers/
+│   └── weatherIcon.tsx  # Маппинг icon-кодов → React-иконки (react-icons/wi)
+└── main.tsx             # Entry point, StrictMode, подключение iziToast CSS
+```
+
+### Организация компонентов
+
+Каждый компонент живёт в собственной директории и содержит:
+- `Component.tsx` — логика и рендеринг
+- `Component.module.css` — scoped-стили
+
+Такой подход обеспечивает **изоляцию**, простоту **рефакторинга** и лёгкое **удаление** компонентов без побочных эффектов.
+
+---
+
+## Ключевые технические решения
+
+### State Management — Zustand + `persist`
+
+Стор выполняет роль единого координатора данных. Все запросы к API инициируются через экшены стора, что позволяет централизовать обработку ошибок и управление загрузкой:
+
+```typescript
+// hooks/useStore.ts
+export const useStore = create<Store>()(
+  persist(
+    (set, get) => ({
+      fetchWeather: async (city) => {
+        set({ loading: true });
+        const coords = await weatherService.getGeo(city);
+        const weatherData = await weatherService.fetchWeather(coords);
+        set({ weatherData, loading: false });
+        // Параллельно подгружаем фото и прогноз
+        await get().fetchImage(coords.name);
+        await get().foreCast(coords);
+      },
+      // ...
+    }),
+    {
+      name: "weather-app-storage",
+      partialize: (state) => ({
+        city: state.city,
+        weatherData: state.weatherData,
+        forecastData: state.forecastData,
+      })
+    }
+  )
+);
+```
+
+- **`partialize`** — в `localStorage` сохраняются только `city`, `weatherData` и `forecastData` (без функций и промежуточных состояний)
+- **Selectors** в компонентах для предотвращения лишних ре-рендеров: `useStore((state) => state.weatherData)`
+
+### API-слой — Service Object Pattern
+
+Сервисы реализованы как объекты-синглтоны с отменяемыми запросами:
+
+```typescript
+// services/weatherService.ts
+export const weatherService = {
+  abortController: new AbortController(),
+
+  async getGeo(city: string): Promise<CityCoords | undefined> {
+    this.abortController.abort();                    // отменяем предыдущий запрос
+    this.abortController = new AbortController();    // новый контроллер
+    const response = await axios.get(geoUrl, {
+      params,
+      signal: this.abortController.signal            // привязка сигнала
+    });
+    // ...
+  }
+};
+```
+
+**Цепочка запросов:** `getGeo(city)` → `fetchWeather(coords)` → параллельно `fetchImage()` + `getForecast()`
+
+### Оптимизация изображений (Unsplash)
+
+Вместо загрузки raw-изображений, URL модифицируется для оптимизации:
+
+```typescript
+const optimizeUrl = new URL(result.urls.raw);
+optimizeUrl.searchParams.set("fm", "avif");   // AVIF-формат
+optimizeUrl.searchParams.set("w", "1200");    // ширина 1200px
+optimizeUrl.searchParams.set("fit", "crop");  // кроп под размер
+optimizeUrl.searchParams.set("q", "60");      // качество 60%
+```
+
+### UX: Skeleton Loading
+
+Компонент `ForecastSkeleton` отображает CSS-анимированные плейсхолдеры пока данные прогноза загружаются, предотвращая layout shift.
+
+### Маппинг иконок погоды
+
+`weatherIcon.tsx` маппит коды OpenWeatherMap (`01d`, `02n`, ...) на SVG-компоненты из `react-icons/wi`, поддерживая дневные и ночные варианты для всех 9 типов погоды.
+
+---
+
+## Используемые API
+
+| API | Эндпоинты | Назначение |
+| :--- | :--- | :--- |
+| [OpenWeatherMap](https://openweathermap.org/api) | `/geo/1.0/direct`, `/data/2.5/weather`, `/data/2.5/forecast` | Геокодинг, текущая погода, 5-дневный прогноз |
+| [Unsplash](https://unsplash.com/developers) | `/search/photos` | Фоновое изображение города |
+
+---
+
+## UI-библиотеки
+
+- **`@codaworks/react-glow`** — glow-эффекты на карточках
+- **`@mawtech/glass-ui`** — glassmorphism-компоненты
+- **`react-circular-progressbar`** — круговые индикаторы (влажность и т.д.)
+- **`react-icons`** — SVG-иконки погоды (`wi`) и UI (`fa`)
+- **`izitoast`** — toast-уведомления для ошибок API
+
+**Шрифты:** Montserrat (основной) + Cascadia Code (моноширинный), Google Fonts с `preconnect`.
+
+---
+
+## Конфигурация TypeScript
+
+Проект работает в **strict-режиме** со следующими флагами:
+
+```jsonc
+{
+  "strict": true,
+  "noUnusedLocals": true,
+  "noUnusedParameters": true,
+  "noFallthroughCasesInSwitch": true,
+  "verbatimModuleSyntax": true,     // type-only imports
+  "erasableSyntaxOnly": true        // TS 5.8+ runtime erasure
+}
+```
+
+---
+
+## Быстрый старт
+
+```bash
+# Клонировать
+git clone https://github.com/Skyzary/weather-app.git
+cd weather-app
+
+# Настроить переменные окружения
+cp .env.example .env
+# Заполнить VITE_API_KEY и VITE_UNSPLASH_ACCESS_KEY
+
+# Установить зависимости и запустить
+npm install
+npm run dev
+```
+
+### Переменные окружения
+
+```env
+VITE_API_KEY=ваш_ключ_openweathermap
+VITE_UNSPLASH_ACCESS_KEY=ваш_ключ_unsplash
+```
+
+| Скрипт | Описание |
 | :--- | :--- |
-| <img src="https://skillicons.dev/icons?i=react" width="20"> **React** | A JavaScript library for building user interfaces. |
-| <img src="https://skillicons.dev/icons?i=vite" width="20"> **Vite** | Next-generation frontend tooling for a faster development experience. |
-| <img src="https://skillicons.dev/icons?i=ts" width="20"> **TypeScript** | A typed superset of JavaScript that compiles to plain JavaScript. |
-| <img src="https://raw.githubusercontent.com/pmndrs/zustand/main/docs/favicon.ico" width="18"> **Zustand** | A small, fast, and scalable state-management solution for React. |
-| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/eslint/eslint-original.svg" width="20"> **ESLint** | A pluggable linter tool for identifying patterns in JavaScript. |
-| 🧩 **Libraries** | **Axios**, **React Icons**, **React-glow**, **React Circular Progressbar** |
+| `npm run dev` | Dev-сервер с HMR |
+| `npm run build` | `tsc -b && vite build` — проверка типов + production bundle |
+| `npm run lint` | ESLint (flat config) |
+| `npm run preview` | Превью production-сборки локально |
 
 ---
 
-## ⚙️ Getting Started
+## Деплой
 
-To get a local copy up and running, follow these simple steps.
+Развёрнуто на **Vercel**. При использовании `vercel dev` переменные окружения подтягиваются автоматически в `.env.local`.
 
-### 1. Prerequisites
+## Лицензия
 
-* **Node.js** (v18 or higher)
-* **npm**
-
-### 2. API Setup
-
-This application requires two API keys to function fully:
-
-* **OpenWeatherMap API** (Weather data):
-    1.  Go to [OpenWeatherMap](https://openweathermap.org/api) and create an account.
-    2.  Generate a new key in your dashboard (activation may take up to 2 hours).
-* **Unsplash API** (Background images):
-    1.  Go to the [Unsplash Developers portal](https://unsplash.com/developers).
-    2.  Register as a developer and create a **New Application**.
-    3.  Copy your **Access Key** from the dashboard.
-
-### 3. Installation
-
-1.  **Clone the repo**
-    ```sh
-    git clone https://github.com/your_username/weather-app.git
-    cd weather-app
-    ```
-
-2.  **Set up environment variables**  
-    Copy the example file and fill in your API keys:
-    ```sh
-    cp .env.example .env
-    ```
-    Then open `.env` and replace the placeholders with your real keys:
-    ```env
-    VITE_API_KEY=your_openweathermap_api_key_here
-    VITE_UNSPLASH_ACCESS_KEY=your_unsplash_access_key_here
-    ```
-
-    > **Note:** If you use Vercel CLI (`vercel dev`), it will automatically create a `.env.local` file — this is expected and doesn't require manual setup.
-
-3.  **Install NPM packages**
-    ```sh
-    npm install
-    ```
-
-4.  **Start the development server**
-    ```sh
-    npm run dev
-    ```
-
----
-
-## 📜 Available Scripts
-
-In the project directory, you can run:
-
-* `npm run dev`: Runs the app in development mode.
-* `npm run build`: Builds the app for production.
-* `npm run lint`: Lints the project files.
-* `npm run preview`: Serves the production build locally.
-
-## 📄 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
+MIT
