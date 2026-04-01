@@ -1,0 +1,114 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import axios from 'axios'
+import { weatherService } from './weatherService'
+import iziToast from 'izitoast'
+
+vi.mock('axios')
+vi.mock('izitoast')
+
+describe('weatherService', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    vi.stubEnv('VITE_API_KEY', 'test-key')
+  })
+
+  describe('getGeo', () => {
+    it('should return coordinates for a valid city', async () => {
+      const mockData = [{ lat: 55.75, lon: 37.61, name: 'Moscow' }]
+      vi.mocked(axios.get).mockResolvedValue({ data: mockData })
+
+      const result = await weatherService.getGeo('Moscow')
+
+      expect(result).toEqual({ lat: 55.75, lon: 37.61, name: 'Moscow' })
+      expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('geo/1.0/direct'), expect.objectContaining({
+        params: expect.objectContaining({ appid: 'test-key' })
+      }))
+    })
+
+    it('should show error and return undefined when city is not found', async () => {
+      vi.mocked(axios.get).mockResolvedValue({ data: [] })
+
+      const result = await weatherService.getGeo('UnknownCity')
+
+      expect(result).toBeUndefined()
+      expect(iziToast.error).toHaveBeenCalledWith(expect.objectContaining({ message: 'Город не найден' }))
+    })
+
+    it('should handle 401 error', async () => {
+        vi.mocked(axios.isAxiosError).mockReturnValue(true)
+        vi.mocked(axios.get).mockRejectedValue({
+            isAxiosError: true,
+            response: { status: 401 },
+            message: 'Unauthorized'
+        })
+
+        const result = await weatherService.getGeo('Moscow')
+        expect(result).toBeUndefined()
+        expect(iziToast.error).toHaveBeenCalledWith(expect.objectContaining({ message: 'Weather: Ошибка авторизации' }))
+    })
+  })
+
+  describe('fetchWeather', () => {
+    const mockCoords = { lat: 55.75, lon: 37.61, name: 'Moscow' }
+
+    it('should fetch weather for valid coordinates', async () => {
+      const mockWeather = { main: { temp: 20 }, name: 'Moscow' }
+      vi.mocked(axios.get).mockResolvedValue({ data: mockWeather })
+
+      const result = await weatherService.fetchWeather(mockCoords)
+
+      expect(result).toEqual(mockWeather)
+    })
+
+    it('should throw error for invalid coordinates', async () => {
+      await expect(weatherService.fetchWeather({ lat: NaN, lon: 37.61, name: '' })).rejects.toThrow('Invalid coordinates')
+    })
+
+    it('should throw error if API key is missing', async () => {
+      vi.stubEnv('VITE_API_KEY', '')
+      await expect(weatherService.fetchWeather(mockCoords)).rejects.toThrow('API key is not defined')
+    })
+  })
+
+  describe('getForecast', () => {
+    const mockCoords = { lat: 55.75, lon: 37.61, name: 'Moscow' }
+
+    it('should return forecast data for valid coordinates', async () => {
+      const mockForecast = { list: [{ dt_txt: '2026-03-27 12:00:00', main: { temp: 15 } }] }
+      vi.mocked(axios.get).mockResolvedValue({ data: mockForecast })
+
+      const result = await weatherService.getForecast(mockCoords)
+
+      expect(result).toEqual(mockForecast)
+      expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('forecast'), expect.objectContaining({
+        params: expect.objectContaining({ lat: 55.75, lon: 37.61, appid: 'test-key' })
+      }))
+    })
+
+    it('should return undefined if coordinates are missing', async () => {
+      const result = await weatherService.getForecast(undefined as any)
+      expect(result).toBeUndefined()
+    })
+
+    it('should throw error if API key is missing', async () => {
+      vi.stubEnv('VITE_API_KEY', '')
+      await expect(weatherService.getForecast(mockCoords)).rejects.toThrow('API key is not defined')
+    })
+
+    it('should handle 401 error from OpenWeatherMap', async () => {
+      vi.mocked(axios.isAxiosError).mockReturnValue(true)
+      vi.mocked(axios.get).mockRejectedValue({
+        isAxiosError: true,
+        response: { status: 401 },
+        message: 'Unauthorized'
+      })
+
+      const result = await weatherService.getForecast(mockCoords)
+
+      expect(result).toBeUndefined()
+      expect(iziToast.error).toHaveBeenCalledWith(expect.objectContaining({
+        message: 'Ошибка авторизации'
+      }))
+    })
+  })
+})

@@ -28,8 +28,8 @@ export default function VillageSearchField() {
             <h1 className={css.title}>Weather App</h1>
             <div className={css.searchBox}>
                 <CiSearch className={css.searchIcon} size={24}/>
-                <label aria-label={'Поиск города'}>
-                    <input
+                <label>
+                    <input aria-label={'Поиск города'}
                         className={css.searchField}
                         type="text"
                         value={city}
