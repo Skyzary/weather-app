@@ -27,8 +27,8 @@ Object.defineProperty(window, 'matchMedia', {
 })
 
 // Polyfill requestAnimationFrame
-global.requestAnimationFrame = (callback) => setTimeout(callback, 0)
-global.cancelAnimationFrame = (id) => clearTimeout(id)
+globalThis.requestAnimationFrame = (callback: FrameRequestCallback) => setTimeout(callback, 0)
+globalThis.cancelAnimationFrame = (id: number) => clearTimeout(id)
 
 // Mock localStorage
 const localStorageMock = (function () {

@@ -1,4 +1,5 @@
 import axios from "axios";
+import iziToast from "izitoast";
 
 const BASE_URL = "https://api.unsplash.com/search/photos";
 export const imageService = {
@@ -38,6 +39,9 @@ export const imageService = {
             }
             return undefined;
         } catch (error) {
+            if (axios.isAxiosError(error) && error.response?.status === 401) {
+                iziToast.error({ message: 'Unsplash:  Ошибка авторизации' })
+            }
             console.error("Error fetching image from Unsplash:", error);
             return undefined;
         }

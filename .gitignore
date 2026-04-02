@@ -19,3 +19,6 @@ npm-debug.log*
 *.sw?
 *.sln
 *.njsproj
+
+# LinkedIn Post
+LINKEDIN_POST.md
