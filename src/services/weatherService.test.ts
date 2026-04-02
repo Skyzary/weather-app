@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import axios from 'axios'
 import { weatherService } from './weatherService'
 import iziToast from 'izitoast'
+import type { CityCoords, CurrentWeatherData, ForecastData } from '../types/WeatherData'
 
 vi.mock('axios')
 vi.mock('izitoast')
@@ -49,10 +50,10 @@ describe('weatherService', () => {
   })
 
   describe('fetchWeather', () => {
-    const mockCoords = { lat: 55.75, lon: 37.61, name: 'Moscow' }
+    const mockCoords: CityCoords = { lat: 55.75, lon: 37.61, name: 'Moscow' }
 
     it('should fetch weather for valid coordinates', async () => {
-      const mockWeather = { main: { temp: 20 }, name: 'Moscow' }
+      const mockWeather = { main: { temp: 20 }, name: 'Moscow' } as unknown as CurrentWeatherData
       vi.mocked(axios.get).mockResolvedValue({ data: mockWeather })
 
       const result = await weatherService.fetchWeather(mockCoords)
@@ -71,10 +72,10 @@ describe('weatherService', () => {
   })
 
   describe('getForecast', () => {
-    const mockCoords = { lat: 55.75, lon: 37.61, name: 'Moscow' }
+    const mockCoords: CityCoords = { lat: 55.75, lon: 37.61, name: 'Moscow' }
 
     it('should return forecast data for valid coordinates', async () => {
-      const mockForecast = { list: [{ dt_txt: '2026-03-27 12:00:00', main: { temp: 15 } }] }
+      const mockForecast = { list: [{ dt_txt: '2026-03-27 12:00:00', main: { temp: 15 } }] } as unknown as ForecastData
       vi.mocked(axios.get).mockResolvedValue({ data: mockForecast })
 
       const result = await weatherService.getForecast(mockCoords)
@@ -86,7 +87,7 @@ describe('weatherService', () => {
     })
 
     it('should return undefined if coordinates are missing', async () => {
-      const result = await weatherService.getForecast(undefined as any)
+      const result = await weatherService.getForecast(undefined)
       expect(result).toBeUndefined()
     })
 

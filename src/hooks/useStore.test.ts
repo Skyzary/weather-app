@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useStore } from './useStore'
 import { weatherService } from '../services/weatherService'
 import { imageService } from '../services/imageService'
+import type { CurrentWeatherData, ForecastData } from '../types/WeatherData'
 
 vi.mock('../services/weatherService')
 vi.mock('../services/imageService')
@@ -27,14 +28,14 @@ describe('useStore', () => {
 
   it('should fetch weather and update state correctly', async () => {
     const mockCoords = { lat: 51.5, lon: -0.12, name: 'London' }
-    const mockWeather = { main: { temp: 15 }, name: 'London' }
+    const mockWeather = { main: { temp: 15 }, name: 'London' } as unknown as CurrentWeatherData
     const mockImage = { imageUrl: 'url', imageAlt: 'alt' }
-    const mockForecast = { list: [] }
+    const mockForecast = { list: [] } as unknown as ForecastData
 
     vi.mocked(weatherService.getGeo).mockResolvedValue(mockCoords)
-    vi.mocked(weatherService.fetchWeather).mockResolvedValue(mockWeather as any)
+    vi.mocked(weatherService.fetchWeather).mockResolvedValue(mockWeather)
     vi.mocked(imageService.getCityImage).mockResolvedValue(mockImage)
-    vi.mocked(weatherService.getForecast).mockResolvedValue(mockForecast as any)
+    vi.mocked(weatherService.getForecast).mockResolvedValue(mockForecast)
 
     await useStore.getState().fetchWeather('London')
 
