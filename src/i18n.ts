@@ -5,6 +5,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import en from './locales/en.json';
 import fr from './locales/fr.json';
 import ru from './locales/ru.json';
+import uk from './locales/uk.json';
 
 i18n
   .use(LanguageDetector)
@@ -13,7 +14,8 @@ i18n
     resources: {
       en,
       fr,
-      ru
+      ru,
+      uk
     },
     fallbackLng: 'en',
     detection: {
@@ -37,12 +39,15 @@ if (!localStorage.getItem('i18nextLng')) {
       const countryCode = data.country;
       const frCountries = ['FR', 'BE', 'CH', 'CA', 'LU', 'MC', 'SN', 'CI', 'CM'];
       const ruCountries = ['RU', 'BY', 'KZ', 'KG', 'TJ'];
+      const ukCountries = ['UA'];
       
       let lang = 'en';
       if (frCountries.includes(countryCode)) {
         lang = 'fr';
       } else if (ruCountries.includes(countryCode)) {
         lang = 'ru';
+      } else if (ukCountries.includes(countryCode)) {
+        lang = 'uk';
       }
       
       i18n.changeLanguage(lang);

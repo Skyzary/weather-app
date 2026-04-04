@@ -1,3 +1,5 @@
+[English](README.md) | [Русский](README.ru.md) | [Українська](README.uk.md) | [Français](README.fr.md)
+
 # 🌤️ Weather App
 
 This is a modern weather application that provides real-time weather information for any city. The application is built with a focus on a clean, intuitive user interface and a robust, scalable architecture.
@@ -18,20 +20,22 @@ You can view a live demo of the application hosted on Vercel:
 * **Search:** Easily search for any city in the world.
 * **Responsive Design:** The application is fully responsive and works on all devices.
 * **Modern UI:** A beautiful interface featuring glow effects and circular progress indicators.
+* **Internationalization:** Supports English, French, Russian and Ukrainian languages with geolocation detection.
 
 ---
 
 ## 🛠️ Tech Stack
 
 The application is built using the following technologies:
-Technology | Description |
+
+| Technology | Description |
 | :--- | :--- |
 | <img src="https://skillicons.dev/icons?i=react" width="20"> **React** | A JavaScript library for building user interfaces. |
 | <img src="https://skillicons.dev/icons?i=vite" width="20"> **Vite** | Next-generation frontend tooling for a faster development experience. |
 | <img src="https://skillicons.dev/icons?i=ts" width="20"> **TypeScript** | A typed superset of JavaScript that compiles to plain JavaScript. |
 | <img src="https://raw.githubusercontent.com/pmndrs/zustand/main/docs/favicon.ico" width="18"> **Zustand** | A small, fast, and scalable state-management solution for React. |
 | <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/eslint/eslint-original.svg" width="20"> **ESLint** | A pluggable linter tool for identifying patterns in JavaScript. |
-| 🧩 **Libraries** | **Axios**, **React Icons**, **React-glow**, **React Circular Progressbar** |
+| 🧩 **Libraries** | **Axios**, **React Icons**, **React-glow**, **React Circular Progressbar**, **i18next** |
 
 ---
 
@@ -60,13 +64,13 @@ This application requires two API keys to function fully:
 
 1.  **Clone the repo**
     ```sh
-    git clone [https://github.com/your_username/weather-app.git](https://github.com/your_username/weather-app.git)
+    git clone https://github.com/your_username/weather-app.git
     cd weather-app
     ```
 
 2.  **Set up environment variables** Create a `.env` file in the root directory and add your keys:
     ```env
-    VITE_WEATHER_API_KEY=your_weather_key_here
+    VITE_API_KEY=your_weather_key_here
     VITE_UNSPLASH_ACCESS_KEY=your_unsplash_key_here
     ```
 

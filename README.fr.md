@@ -1,3 +1,5 @@
+[English](README.md) | [Русский](README.ru.md) | [Українська](README.uk.md) | [Français](README.fr.md)
+
 # 🌤️ Application Météo
 
 Il s'agit d'une application météo moderne qui fournit des informations météorologiques en temps réel pour n'importe quelle ville. L'application est conçue avec une interface utilisateur épurée et intuitive, ainsi qu'une architecture robuste et évolutive.
@@ -18,13 +20,15 @@ Vous pouvez consulter une démo en direct de l'application hébergée sur Vercel
 * **Recherche :** Recherchez facilement n'importe quelle ville dans le monde.
 * **Design responsive :** L'application s'adapte à tous les écrans et fonctionne sur tous les appareils.
 * **Interface moderne :** Une interface attrayante avec des effets lumineux et des indicateurs de progression circulaires.
+* **Internationalisation :** Supporte l'anglais, le français, le russe et l'ukrainien avec détection de géolocalisation.
 
 ---
 
 ## 🛠️ Stack Technologique
 
 L'application est construite en utilisant les technologies suivantes :
-Technologie | Description |
+
+| Technologie | Description |
 | :--- | :--- |
 | <img src="https://skillicons.dev/icons?i=react" width="20"> **React** | Une bibliothèque JavaScript pour créer des interfaces utilisateur. |
 | <img src="https://skillicons.dev/icons?i=vite" width="20"> **Vite** | Un outil de développement frontend de nouvelle génération. |
@@ -60,13 +64,13 @@ Cette application nécessite deux clés API pour fonctionner pleinement :
 
 1.  **Cloner le dépôt**
     ```sh
-    git clone [https://github.com/your_username/weather-app.git](https://github.com/your_username/weather-app.git)
+    git clone https://github.com/your_username/weather-app.git
     cd weather-app
     ```
 
 2.  **Configurer les variables d'environnement** Créez un fichier `.env` à la racine et ajoutez vos clés :
     ```env
-    VITE_API_KEY=votre_cle_meteo_ici
+    VITE_WEATHER_API_KEY=votre_cle_meteo_ici
     VITE_UNSPLASH_ACCESS_KEY=votre_cle_unsplash_ici
     ```
 

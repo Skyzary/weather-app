@@ -1,0 +1,24 @@
+{
+  "translation": {
+    "cityNotFound": "Місто не знайдено",
+    "authErrorWeather": "Weather: Помилка авторизації",
+    "authErrorUnsplash": "Unsplash: Помилка авторизації",
+    "authError": "Помилка авторизації",
+    "weatherInCity": "Погода у місті: {{city}}",
+    "weatherInCityImageAlt": "Погода у місті {{city}}",
+    "temperature": "Температура",
+    "feelsLike": "Відчувається як: {{temp}}°C",
+    "description": "Опис",
+    "noDescription": "Немає опису",
+    "humidity": "Вологість",
+    "windSpeed": "Швидкість вітру",
+    "ms": "м/с",
+    "unavailable": "Недоступно",
+    "pressure": "Тиск",
+    "hpa": "гПа",
+    "enterCityName": "Введіть назву міста або села",
+    "searchCity": "Пошук міста",
+    "forecast5Days": "Прогноз на 5 днів",
+    "error": "Помилка"
+  }
+}
