@@ -6,43 +6,8 @@ import en from './locales/en.json';
 import fr from './locales/fr.json';
 import ru from './locales/ru.json';
 
-const geoDetector: any = {
-  name: 'geoDetector',
-  type: 'languageDetector',
-  async: true,
-  detect: async (callback: (lng: string) => void) => {
-    try {
-      const response = await fetch('https://get.geojs.io/v1/ip/geo.json');
-      if (!response.ok) {
-        throw new Error(\`HTTP error! status: \${response.status}\`);
-      }
-      const data = await response.json();
-      const countryCode = data.country;
-      
-      const frCountries = ['FR', 'BE', 'CH', 'CA', 'LU', 'MC', 'SN', 'CI', 'CM']; // French speaking countries
-      const ruCountries = ['RU', 'BY', 'KZ', 'KG', 'TJ']; // Russian speaking countries
-      
-      if (frCountries.includes(countryCode)) {
-        callback('fr');
-      } else if (ruCountries.includes(countryCode)) {
-        callback('ru');
-      } else {
-        callback('en');
-      }
-    } catch (error) {
-      console.error('Geo detection failed:', error);
-      callback('en'); // fallback
-    }
-  },
-  init: () => {},
-  cacheUserLanguage: () => {}
-};
-
-const languageDetector = new LanguageDetector();
-languageDetector.addDetector(geoDetector);
-
 i18n
-  .use(languageDetector)
+  .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     resources: {
@@ -52,12 +17,39 @@ i18n
     },
     fallbackLng: 'en',
     detection: {
-      order: ['geoDetector', 'localStorage', 'navigator'],
+      order: ['localStorage', 'navigator'],
       caches: ['localStorage']
     },
     interpolation: {
       escapeValue: false
     }
   });
+
+if (!localStorage.getItem('i18nextLng')) {
+  fetch('https://get.geojs.io/v1/ip/geo.json')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      const countryCode = data.country;
+      const frCountries = ['FR', 'BE', 'CH', 'CA', 'LU', 'MC', 'SN', 'CI', 'CM'];
+      const ruCountries = ['RU', 'BY', 'KZ', 'KG', 'TJ'];
+      
+      let lang = 'en';
+      if (frCountries.includes(countryCode)) {
+        lang = 'fr';
+      } else if (ruCountries.includes(countryCode)) {
+        lang = 'ru';
+      }
+      
+      i18n.changeLanguage(lang);
+    })
+    .catch(error => {
+      console.error('Geo detection failed:', error);
+    });
+}
 
 export default i18n;
