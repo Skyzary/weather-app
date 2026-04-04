@@ -47,7 +47,12 @@ export default function App() {
       )}
 
       <div className={css.dataContainer}>
-        {cityImage?.imageUrl && <CityImage imageUrl={cityImage.imageUrl} imageAlt={cityImage.imageAlt} />}
+        {weatherData && (
+          <CityImage 
+            imageUrl={cityImage?.imageUrl} 
+            imageAlt={cityImage?.imageAlt || t('weatherInCityImageAlt', { city: weatherData.name })} 
+          />
+        )}
         {weatherData  && <WeatherData data={weatherData} />}
       </div>
       
