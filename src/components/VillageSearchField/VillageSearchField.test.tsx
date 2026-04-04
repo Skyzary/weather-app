@@ -29,13 +29,13 @@ describe('VillageSearchField', () => {
 
   it('should render input field', () => {
     render(<VillageSearchField />)
-    expect(screen.getByPlaceholderText(/Введите название города/)).toBeInTheDocument()
+    expect(screen.getByPlaceholderText(/enterCityName/)).toBeInTheDocument()
   })
 
   it('should call setCity on input change', () => {
     render(<VillageSearchField />)
     
-    const input = screen.getByPlaceholderText(/Введите название города/)
+    const input = screen.getByPlaceholderText(/enterCityName/)
     fireEvent.change(input, { target: { value: 'Moscow' } })
     
     expect(mockSetCity).toHaveBeenCalledWith('Moscow')

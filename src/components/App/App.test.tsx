@@ -37,7 +37,7 @@ describe('App Component', () => {
     }))
 
     render(<App />)
-    expect(screen.getByText(/Погода в городе: Moscow/)).toBeInTheDocument()
+    expect(screen.getByText(/weatherInCity/)).toBeInTheDocument()
     expect(screen.getByTestId('weather-data')).toBeInTheDocument()
     expect(screen.getByTestId('city-image')).toBeInTheDocument()
     expect(screen.getByTestId('forecast')).toBeInTheDocument()

@@ -56,7 +56,7 @@ describe('imageService', () => {
 
     expect(result).toBeUndefined()
     expect(iziToast.error).toHaveBeenCalledWith(expect.objectContaining({
-      message: expect.stringContaining('Unsplash:  Ошибка авторизации')
+      message: expect.stringContaining('authErrorUnsplash')
     }))
   })
 

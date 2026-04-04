@@ -32,7 +32,7 @@ describe('weatherService', () => {
       const result = await weatherService.getGeo('UnknownCity')
 
       expect(result).toBeUndefined()
-      expect(iziToast.error).toHaveBeenCalledWith(expect.objectContaining({ message: 'Город не найден' }))
+      expect(iziToast.error).toHaveBeenCalledWith(expect.objectContaining({ message: 'cityNotFound' }))
     })
 
     it('should handle 401 error', async () => {
@@ -45,7 +45,7 @@ describe('weatherService', () => {
 
         const result = await weatherService.getGeo('Moscow')
         expect(result).toBeUndefined()
-        expect(iziToast.error).toHaveBeenCalledWith(expect.objectContaining({ message: 'Weather: Ошибка авторизации' }))
+        expect(iziToast.error).toHaveBeenCalledWith(expect.objectContaining({ message: 'authErrorWeather' }))
     })
   })
 
@@ -108,7 +108,7 @@ describe('weatherService', () => {
 
       expect(result).toBeUndefined()
       expect(iziToast.error).toHaveBeenCalledWith(expect.objectContaining({
-        message: 'Ошибка авторизации'
+        message: 'authError'
       }))
     })
   })

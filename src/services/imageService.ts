@@ -1,5 +1,6 @@
 import axios from "axios";
 import iziToast from "izitoast";
+import i18n from '../i18n';
 
 const BASE_URL = "https://api.unsplash.com/search/photos";
 export const imageService = {
@@ -34,13 +35,13 @@ export const imageService = {
 
                 return {
                     imageUrl: optimizeUrl.toString(),
-                    imageAlt: result.alt_description || `Погода в городе ${city}`
+                    imageAlt: result.alt_description || i18n.t('weatherInCityImageAlt', { city })
                 };
             }
             return undefined;
         } catch (error) {
             if (axios.isAxiosError(error) && error.response?.status === 401) {
-                iziToast.error({ message: 'Unsplash:  Ошибка авторизации' })
+                iziToast.error({ message: i18n.t('authErrorUnsplash') })
             }
             console.error("Error fetching image from Unsplash:", error);
             return undefined;

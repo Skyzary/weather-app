@@ -6,6 +6,7 @@ import { getWeatherIcon } from "../../helpers/weatherIcon.tsx";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { useState, useEffect, useRef, memo } from "react";
+import { useTranslation } from "react-i18next";
 
 interface WeatherDataProps {
   data: {
@@ -27,6 +28,7 @@ interface WeatherDataProps {
 }
 
 function WeatherData({ data }: WeatherDataProps) {
+  const { t } = useTranslation();
   const weather = data.weather?.[0];
   const [humidity, setHumidity] = useState(0);
 
@@ -95,18 +97,18 @@ function WeatherData({ data }: WeatherDataProps) {
                 <div className={css.tempAndDesc}>
                   <div className={css.tempDetails}>
                     <FaTemperatureHigh size={48} className={css.tempIcon}/>
-                    <p>Температура</p>
+                    <p>{t('temperature')}</p>
                     <div>
                       <span>{Math.round(data.main.temp)}°C</span>
                       <small>
-                        Ощущается как: {data.main.feels_like != null ? Math.round(data.main.feels_like) : "--"}°C
+                        {data.main.feels_like != null ? t('feelsLike', { temp: Math.round(data.main.feels_like) }) : `--°C`}
                       </small>
                     </div>
                   </div>
                   <div className={css.descriptionDetails}>
                     {getWeatherIcon(weather?.icon)}
-                    <p>Описание</p>
-                    <span>{weather?.description || "Нет описания"}</span>
+                    <p>{t('description')}</p>
+                    <span>{weather?.description || t('noDescription')}</span>
                   </div>
                 </div>
               </div>
@@ -117,7 +119,7 @@ function WeatherData({ data }: WeatherDataProps) {
             <Glow color="#fff">
               <div className={`${css.prop} ${css.humidityCard}`}>
                 <WiHumidity size={64} className={css.humidityIcon}/>
-                <p>Влажность</p>
+                <p>{t('humidity')}</p>
                 <div className={css.circleWrapper}>
                   <CircularProgressbar
                       className={css.humidityCircle}
@@ -141,9 +143,9 @@ function WeatherData({ data }: WeatherDataProps) {
             <Glow color="#fff">
               <div className={`${css.prop} ${css.windSpeedCard}`}>
                 <FaWind size={48} />
-                <p>Скорость ветра</p>
+                <p>{t('windSpeed')}</p>
                 <span>
-                {data.wind?.speed != null ? `${data.wind.speed} м/с` : "Недоступно"}
+                {data.wind?.speed != null ? `${data.wind.speed} ${t('ms')}` : t('unavailable')}
               </span>
               </div>
             </Glow>
@@ -153,9 +155,9 @@ function WeatherData({ data }: WeatherDataProps) {
             <Glow color="#fff">
               <div className={`${css.prop} ${css.pressureCard}`}>
                 <FaTachometerAlt size={48} />
-                <p>Давление</p>
+                <p>{t('pressure')}</p>
                 <span>
-                {data.main.pressure != null ? `${data.main.pressure} гПа` : "Недоступно"}
+                {data.main.pressure != null ? `${data.main.pressure} ${t('hpa')}` : t('unavailable')}
               </span>
               </div>
             </Glow>

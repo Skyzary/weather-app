@@ -50,3 +50,28 @@ const localStorageMock = (function () {
 Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,
 })
+
+import { vi } from 'vitest';
+
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string, options?: any) => {
+        if (key === 'feelsLike') return 'feelsLike';
+        if (options && options.city) return 'weatherInCity';
+        return key;
+    },
+    i18n: {
+      changeLanguage: () => new Promise(() => {}),
+      language: 'en',
+    },
+  }),
+  initReactI18next: { type: '3rdParty', init: () => {} }
+}));
+
+vi.mock('../i18n', () => ({
+  default: {
+    t: (key: string) => key,
+    language: 'en'
+  }
+}));
+

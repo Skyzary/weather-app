@@ -25,7 +25,7 @@ describe('Forecast', () => {
   it('renders forecast items correctly', () => {
     render(<Forecast forecastData={mockForecastData as any} />)
 
-    expect(screen.getByText('Прогноз на 5 дней')).toBeInTheDocument()
+    expect(screen.getByText('forecast5Days')).toBeInTheDocument()
     // 2 days * 2 copies due to react-glow = 4
     expect(screen.getAllByTestId('weather-icon')).toHaveLength(4)
     expect(screen.getAllByText(/15°C/)[0]).toBeInTheDocument()

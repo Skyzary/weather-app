@@ -34,10 +34,10 @@ describe('WeatherData', () => {
     render(<WeatherData data={mockData as any} />)
 
     expect(screen.getAllByText(/20°C/)[0]).toBeInTheDocument()
-    expect(screen.getAllByText(/Ощущается как: 18°C/)[0]).toBeInTheDocument()
+    expect(screen.getAllByText(/feelsLike/)[0]).toBeInTheDocument()
     expect(screen.getAllByText(/ясно/)[0]).toBeInTheDocument()
-    expect(screen.getAllByText(/5.5 м\/с/)[0]).toBeInTheDocument()
-    expect(screen.getAllByText(/1012 гПа/)[0]).toBeInTheDocument()
+    expect(screen.getAllByText(/5.5 ms/)[0]).toBeInTheDocument()
+    expect(screen.getAllByText(/1012 hpa/)[0]).toBeInTheDocument()
     expect(screen.getAllByTestId('weather-icon')[0]).toBeInTheDocument()
   })
 
@@ -50,7 +50,7 @@ describe('WeatherData', () => {
     }
     render(<WeatherData data={incompleteData as any} />)
 
-    expect(screen.getAllByText(/Нет описания/)[0]).toBeInTheDocument()
-    expect(screen.getAllByText(/Недоступно/)[0]).toBeInTheDocument()
+    expect(screen.getAllByText(/noDescription/)[0]).toBeInTheDocument()
+    expect(screen.getAllByText(/unavailable/)[0]).toBeInTheDocument()
   })
 })

@@ -1,6 +1,7 @@
 import axios from "axios";
 import iziToast from 'izitoast'
 import type {CityCoords, CurrentWeatherData, ForecastData} from '../types/WeatherData'
+import i18n from '../i18n'
 
 const geoUrl = 'https://api.openweathermap.org/geo/1.0/direct'
 const weatherUrl = 'https://api.openweathermap.org/data/2.5/weather'
@@ -30,13 +31,13 @@ export const  weatherService = {
                         name: response.data[0].name
                     } as CityCoords)
                 }
-                iziToast.error({ message: 'Город не найден' })
+                iziToast.error({ message: i18n.t('cityNotFound') })
             }
             return undefined
 
         } catch (error) {
             if (axios.isAxiosError(error) && error.response?.status === 401) {
-                iziToast.error({ message: 'Weather: Ошибка авторизации' })
+                iziToast.error({ message: i18n.t('authErrorWeather') })
                 return undefined
             }
             throw new Error('Error fetching weather data: ' + error)
@@ -61,7 +62,7 @@ export const  weatherService = {
                 lon: coords.lon,
                 appid: accessKey,
                 units: "metric",
-                lang: "ru"
+                lang: i18n.language?.split('-')[0] || "en"
             }
             const response = await axios.get(weatherUrl, {params})
             return response.data as CurrentWeatherData
@@ -82,14 +83,14 @@ export const  weatherService = {
             lon: coords.lon,
             appid: accessKey,
             units: "metric",
-            lang: "ru"
+            lang: i18n.language?.split('-')[0] || "en"
         }
         try {
             const response = await axios.get(forecastUrl, {params})
             return  response.data as ForecastData
         }  catch (error) {
             if (axios.isAxiosError(error) && error.response?.status === 401) {
-                iziToast.error({ message: 'Ошибка авторизации' })
+                iziToast.error({ message: i18n.t('authError') })
                 return undefined
             }
             throw new Error('Error fetching weather data: ' + error)
