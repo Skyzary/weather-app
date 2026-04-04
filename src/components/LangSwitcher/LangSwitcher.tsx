@@ -23,17 +23,32 @@ export default function LangSwitcher({ onLanguageChange }: LangSwitcherProps) {
     { code: 'uk', label: 'UA' },
   ];
 
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    changeLanguage(e.target.value);
+  };
+
   return (
     <div className={css.langSwitcher}>
-      {languages.map((lang) => (
-        <button
-          key={lang.code}
-          onClick={() => changeLanguage(lang.code)}
-          className={currentLang.startsWith(lang.code) ? css.activeLang : ''}
-        >
-          {lang.label}
-        </button>
-      ))}
+      <div className={css.desktopSwitcher}>
+        {languages.map((lang) => (
+          <button
+            key={lang.code}
+            onClick={() => changeLanguage(lang.code)}
+            className={currentLang.startsWith(lang.code) ? css.activeLang : ''}
+          >
+            {lang.label}
+          </button>
+        ))}
+      </div>
+      <div className={css.mobileSwitcher}>
+        <select value={currentLang.split('-')[0]} onChange={handleSelectChange} className={css.selectLang}>
+          {languages.map((lang) => (
+            <option key={lang.code} value={lang.code}>
+              {lang.label}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 }
