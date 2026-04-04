@@ -15,21 +15,23 @@
 }
 
 .langSwitcher button {
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  border-radius: 5px;
+  background: transparent;
+  border: 1px solid rgba(211, 211, 211, 0.2);
+  border-radius: 15px;
   padding: 5px 10px;
   color: white;
   cursor: pointer;
   transition: background 0.2s;
+  box-shadow: 0 4px 8px rgb(0 0 0 / 0.37);
+
 }
 
 .langSwitcher button:hover {
-  background: rgba(255, 255, 255, 0.4);
+  background: rgb(51 51 51 / 0.4);
 }
 
 .langSwitcher button.activeLang {
-  background: rgba(255, 255, 255, 0.6);
+  background: rgb(16 15 15 / 0.3);
   font-weight: bold;
 }
 
@@ -37,13 +39,15 @@
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background: rgb(51 51 51 / 0.3) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 5px center;
+  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 5px center;
   backdrop-filter: blur(10px);
   color: white;
-  border: none;
   border-radius: 10px;
   width: 60px;
-  padding: 5px;
+  padding: 5px 8px;
+  box-shadow: 0 4px 8px rgb(0 0 0 / 0.37);
+  border: 1px solid rgba(211, 211, 211, 0.2);
+
 
 }
 
