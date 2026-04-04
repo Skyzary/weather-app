@@ -31,26 +31,3 @@
   }
 }
 
-.langSwitcher {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  padding: 10px;
-}
-.langSwitcher button {
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  border-radius: 5px;
-  padding: 5px 10px;
-  color: white;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.langSwitcher button:hover {
-  background: rgba(255, 255, 255, 0.4);
-}
-.langSwitcher button.activeLang {
-  background: rgba(255, 255, 255, 0.6);
-  font-weight: bold;
-}
-

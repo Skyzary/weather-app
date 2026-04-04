@@ -10,9 +10,10 @@ import Forecast from "../Forecast/Forecast.tsx";
 import CityImage from "../CityImage/CityImage.tsx";
 import ForecastSkeleton from "../Forecast/ForecastSkeleton.tsx";
 import { useTranslation } from "react-i18next";
+import LangSwitcher from "../LangSwitcher/LangSwitcher";
 
 export default function App() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const weatherData = useStore((state) => state.weatherData);
   const loading = useStore((state) => state.loading);
   const cityFound = useStore((state) => state.cityFound);
@@ -30,22 +31,15 @@ export default function App() {
     }
   }, [cityFound, t]);
 
-  const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
+  const onLanguageChange = () => {
     if (weatherData?.name) {
       fetchWeather(weatherData.name);
     }
   };
 
-  const currentLang = i18n.language || 'en';
-
   return (
     <div className={css.App}>
-      <div className={css.langSwitcher}>
-        <button onClick={() => changeLanguage('en')} className={currentLang.startsWith('en') ? css.activeLang : ''}>EN</button>
-        <button onClick={() => changeLanguage('fr')} className={currentLang.startsWith('fr') ? css.activeLang : ''}>FR</button>
-        <button onClick={() => changeLanguage('ru')} className={currentLang.startsWith('ru') ? css.activeLang : ''}>RU</button>
-      </div>
+      <LangSwitcher onLanguageChange={onLanguageChange} />
       <VillageSearchField />
 
       {weatherData && (
