@@ -1,8 +1,9 @@
 * {
-  color: white;
+  box-sizing: border-box;
+    color: white;
 }
 body {
-  background-image: url("./public/bg.jpg");
+  background-image: url("./public/bg.png");
   background-color: #000000;
   background-size: cover;
   background-repeat: no-repeat;
