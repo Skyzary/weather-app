@@ -5,4 +5,13 @@
   text-align: center;
   color: white;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  font-size: x-large;
+  margin-bottom: 20px;
+}
+.App {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/bg.jpg');
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: 20px;
 }
