@@ -1,6 +1,8 @@
 # Сборка и зависимости
 node_modules/
 dist/
+coverage
+
 
 *.log
 npm-debug.log*
@@ -17,3 +19,7 @@ npm-debug.log*
 *.sw?
 *.sln
 *.njsproj
+
+# LinkedIn Post
+LINKEDIN_POST.md
+/repomix-output.xml
