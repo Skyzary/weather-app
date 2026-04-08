@@ -1,45 +1,46 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import css from "./VillageSearchField.module.css";
-import { GlassInput } from "@mawtech/glass-ui"
-import { FaSearch } from "react-icons/fa";
+import { CiSearch } from "react-icons/ci";
+import { useStore } from "../../hooks/useStore.ts";
+import * as React from "react";
+import { useTranslation } from "react-i18next";
 
-interface VillageSearchFieldProps {
-  onSearch: (villageName: string) => void;
-}
+export default function VillageSearchField() {
+    const { t } = useTranslation();
+    const fetchWeather = useStore(state => state.fetchWeather);
+    const city = useStore(state => state.city);
+    const setCity = useStore(state => state.setCity);
 
-export default function VillageSearchField({
-  onSearch,
-}: VillageSearchFieldProps) {
-  const [villageName, setVillageName] = useState("");
-  useEffect(() => {
-    const savedVillageName = localStorage.getItem("villageName");
-    if (savedVillageName) {
-      setVillageName(savedVillageName);
+    useEffect(() => {
+        if (!city.trim()){
+            return;
+        }
+
+        const handler = setTimeout(() => {
+            fetchWeather(city);
+        }, 500);
+        return () => clearTimeout(handler);
+    }, [fetchWeather, city]);
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setCity(e.target.value);
     }
-  }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setVillageName(e.target.value);
-    localStorage.setItem("villageName", e.target.value);
-  };
-
-  const handleSearch = () => {
-    onSearch(villageName);
-  };
-  return (
-      <GlassInput
-        className={css.searchField}
-       inputSize='md'
-        type="text"
-        value={villageName}
-        onChange={handleInputChange}
-        rightIcon={<FaSearch onClick={handleSearch} className={css.searchIcon} size={'35px'} /> }
-        placeholder="Введите название города или деревни"
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            handleSearch();
-          }
-        }}
-      />
-  );
+    return (
+        <header>
+            <h1 className={css.title}>Weather App</h1>
+            <div className={css.searchBox}>
+                <CiSearch className={css.searchIcon} size={24}/>
+                <label>
+                    <input aria-label={t('searchCity')}
+                        className={css.searchField}
+                        type="text"
+                        value={city}
+                        onChange={handleInputChange}
+                        placeholder={t('enterCityName')}
+                    />
+                </label>
+            </div>
+        </header>
+    )
 }

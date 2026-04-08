@@ -1,7 +1,8 @@
-import {create} from 'zustand'
-import {persist} from 'zustand/middleware'
-import type {CurrentWeatherData, ForecastItem} from "../types/WeatherData";
-import axios from "axios";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import type { CurrentWeatherData, ForecastItem, ForecastData } from "../types/WeatherData";
+import { weatherService } from '../services/weatherService';
+import { imageService } from '../services/imageService';
 
 interface Store {
     city: string;
@@ -12,90 +13,97 @@ interface Store {
     cityFound: boolean;
     fetchWeather: (city: string) => Promise<void>;
     foreCast: (city: string) => Promise<void>;
+    fetchImage: (city: string) => Promise<void>;
+    cityImage?: {
+        imageUrl: string;
+        imageAlt: string;
+    };
 }
 
 export const useStore = create<Store>()(
     persist(
-        (set) => ({
+        (set, get) => ({
             city: "",
             setCity: (city) => set({ city }),
             weatherData: null,
             forecastData: null,
             loading: false,
             cityFound: true,
-            fetchWeather: async (city) => {
-                if (!city) return;
-                set({loading: true, cityFound: true })
-                const params = {
-                    q: city,
-                    limit: 1,
-                    appid: import.meta.env.VITE_API_KEY,
 
-                };
+            fetchWeather: async (city: string) => {
+                if (!city) return;
+                set({
+                    loading: true,
+                    cityFound: true,
+                    forecastData: null,
+                    cityImage: undefined
+                });
+
                 try {
-                    const geo = await axios.get('https://api.openweathermap.org/geo/1.0/direct', {params})
-                    if(!geo.data.length) {
-                         set({
+                    const coords = await weatherService.getGeo(city);
+
+                    if (!coords) {
+                        set({
                             loading: false,
                             cityFound: false,
                             weatherData: null,
-                            city: ""
-                        })
+                            forecastData: null,
+                            cityImage: undefined
+                        });
                         return;
                     }
-                    const {lat, lon, localNames} = await geo.data[0]
-                    const cityName = localNames?.ru || geo.data[0].name
-                    const weatherResponse = await axios.get('https://api.openweathermap.org/data/2.5/weather', {
-                        params: {
-                            lat,
-                            lon,
-                            appid: import.meta.env.VITE_API_KEY,
-                            units: "metric",
-                            lang: "ru",
-                        }
-                    })
+
+                    const weatherData = await weatherService.fetchWeather(coords);
+
                     set({
-                        city: cityName,
                         loading: false,
-                        weatherData: weatherResponse.data,
+                        weatherData,
                         cityFound: true
-                    })
+                    });
+
+                    get().fetchImage(coords.name);
+                    get().foreCast(coords.name);
                 } catch (error) {
                     set({
                         loading: false,
                         cityFound: false,
                         weatherData: null,
-                        city: ""
-                    })
-                    console.error("Error fetching weather data:", error);
+                    });
+                    console.error("Error in fetchWeather flow:", error);
                 }
             },
-            foreCast: async (city: string): Promise<void> => {
-                if (!city) return;
-                set({loading: true})
+
+            fetchImage: async (city: string) => {
+                set({ cityImage: undefined })
                 try {
-                    const forecastResp = await axios.get('https://api.openweathermap.org/data/2.5/forecast', {
-                        params: {
-                            q: city,
-                            units: "metric",
-                            appid: import.meta.env.VITE_API_KEY,
-                            lang: "ru"
-                        }
-                    });
-                    const forecastData = forecastResp.data
-                    const dailyData: ForecastItem[] = forecastData.list.filter((reading: ForecastItem) => {
-                        return reading.dt_txt.includes('12:00:00')
-                    });
-                    set({
-                        loading: false,
-                        forecastData: dailyData
-                    })
+                    const imageData = await imageService.getCityImage(city);
+                    set({ cityImage: imageData || undefined });
                 } catch (error) {
-                    console.error("Error fetching forecast data:", error);
-                    set({ loading: false });
+                    console.error("Error fetching image:", error);
+                    set({ cityImage: undefined });
+                }
+            },
+
+            foreCast: async (city: string) => {
+                if (!city) return;
+                try {
+                    const coords = await weatherService.getGeo(city);
+                    if (coords) {
+                        const forecastResponse = await weatherService.getForecast(coords) as ForecastData | undefined;
+                        if (forecastResponse && forecastResponse.list) {
+                            const dailyData: ForecastItem[] = forecastResponse.list.filter((reading: ForecastItem) => {
+                                return reading.dt_txt.includes('12:00:00');
+                            });
+                            set({ forecastData: dailyData });
+                        } else {
+                            set({ forecastData: null });
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error fetching forecast:", error);
                 }
             }
         }),
-        {name: "weather-app-storage"}
+        { name: "weather-app-storage" }
     )
-)
+);

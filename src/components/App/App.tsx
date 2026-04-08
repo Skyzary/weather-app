@@ -1,6 +1,5 @@
 import VillageSearchField from "../VillageSearchField/VillageSearchField";
 import WeatherData from "../WeatherData/WeatherData";
-import { MoonLoader } from "react-spinners";
 import css from "./App.module.css";
 import "../../index.css";
 import IziToast from "izitoast";
@@ -8,53 +7,52 @@ import { useEffect } from "react";
 import { useStore } from "../../hooks/useStore";
 import '@mawtech/glass-ui/styles.css';
 import Forecast from "../Forecast/Forecast.tsx";
+import CityImage from "../CityImage/CityImage.tsx";
+import ForecastSkeleton from "../Forecast/ForecastSkeleton.tsx";
+import { useTranslation } from "react-i18next";
+import LangSwitcher from "../LangSwitcher/LangSwitcher";
 
 export default function App() {
-  const {
-    weatherData,
-    loading,
-    cityFound,
-    fetchWeather,
-    forecastData,
-    foreCast
-  } = useStore();
+  const { t } = useTranslation();
+  const weatherData = useStore((state) => state.weatherData);
+  const loading = useStore((state) => state.loading);
+  const cityFound = useStore((state) => state.cityFound);
+  const forecastData = useStore((state) => state.forecastData);
+  const cityImage = useStore((state) => state.cityImage);
+  const fetchWeather = useStore((state) => state.fetchWeather);
 
   useEffect(() => {
     if (!cityFound) {
       IziToast.error({
-        title: "Ошибка",
-        message: "Город не найден",
+        title: t("error"),
+        message: t("cityNotFound"),
         position: "topCenter"
       });
     }
-  }, [cityFound]);
+  }, [cityFound, t]);
 
-  useEffect(() => {
-        if (weatherData && weatherData.name) {
-            foreCast(weatherData.name);
-        }
-    }, [weatherData, foreCast]);
+  const onLanguageChange = () => {
+    if (weatherData?.name) {
+      fetchWeather(weatherData.name);
+    }
+  };
 
   return (
-      <div className={css.App}>
-        <h1 className={css.appHeader}>Погода</h1>
+    <div className={css.App}>
+      <LangSwitcher onLanguageChange={onLanguageChange} />
+      <VillageSearchField />
 
+      {weatherData && (
+        <h2 className={css.appHeader}>{t('weatherInCity', { city: weatherData.name })}</h2>
+      )}
 
-        <VillageSearchField onSearch={fetchWeather} />
-
-        {weatherData && (
-            <h2 className={css.appHeader}>Погода в городе: {weatherData.name}</h2>
-        )}
-
-        {loading && (
-            <div className={css.loader}>
-              <MoonLoader size={50} color="#ffffff" />
-            </div>
-        )}
-
-
-        {weatherData && !loading && <WeatherData data={weatherData} />}
-        {forecastData && !loading && <Forecast forecastData={forecastData} />}
+      <div className={css.dataContainer}>
+        {cityImage?.imageUrl && <CityImage imageUrl={cityImage.imageUrl} imageAlt={cityImage.imageAlt} />}
+        {weatherData  && <WeatherData data={weatherData} />}
       </div>
+      
+      {loading && !forecastData && <ForecastSkeleton />}
+      {forecastData && <Forecast forecastData={forecastData} />}
+    </div>
   );
 }

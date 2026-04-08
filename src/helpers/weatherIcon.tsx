@@ -9,8 +9,9 @@ import {
     WiShowers, WiSnow, WiThunderstorm
 } from "react-icons/wi";
 import {FaInfoCircle} from "react-icons/fa";
+import type {ReactElement} from "react";
 
-export const weatherIcons: Record<string, React.ReactElement> = {
+export const weatherIcons: Record<string, ReactElement> = {
     "01d": <WiDaySunny size={48}/>,
     "01n": <WiNightClear size={48}/>,
     "02d": <WiDayCloudy size={48}/>,

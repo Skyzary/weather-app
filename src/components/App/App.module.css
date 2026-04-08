@@ -7,11 +7,28 @@
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   font-size: x-large;
   margin-bottom: 20px;
+
 }
 .App {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/bg.jpg');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/bg.avif');
   position: relative;
   min-height: 100vh;
   overflow: hidden;
   padding: 20px;
 }
+
+.dataContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+
+@media (max-width: 768px) {
+  .dataContainer {
+    flex-direction: column;
+  }
+}
+

@@ -1,32 +1,15 @@
 .weatherDataContainer {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
   margin-top: 20px;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(2, 140px);
-  row-gap: 50px;
-  column-gap: 20px;
-
+  gap: 16px;
+  padding: 20px;
+  width: 100%;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   color: #ffffff;
+  text-shadow:  0 4px 8px rgba(0, 0, 0, 0.5)
 }
-
-.description {
-  position: relative;
-  grid-area: 1 / 1 / 3 / 2;
-}
-.tempBlock {
-  grid-area: 1 / 2 / 3 / 4;
-}
-.windSpeed {
-  grid-area: 2 / 5 / 3 / 6;
-}
-.pressure {
-  grid-area: 2 / 4 / 3 / 5;
-}
-.humidity {
-  grid-area: 1 / 4 / 2 / 6;
-}
-
 
 .prop {
   display: flex;
@@ -34,14 +17,15 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  border-radius: 12px !important;
-  background-image: none !important;
-
+  border-radius: 20px;
+  background-image: none;
   backdrop-filter: blur(10px);
-  background-color: transparent !important;
+  background-color: transparent;
   -webkit-backdrop-filter: blur(10px) saturate(50%);
+  padding: 16px;
+  flex-grow: 1;
+  width: 100%;
 }
-
 
 .prop p {
   margin: 5px 0 2px 0;
@@ -56,68 +40,121 @@
   font-weight: 700;
 }
 
-.description .prop span {
+.tempAndDesc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.tempDetails, .descriptionDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.descriptionDetails span {
   text-transform: capitalize;
   font-size: 1.1rem;
   line-height: 1.4;
 }
 
-.tempBlock .prop div {
+.tempDetails div {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.tempBlock .prop span {
+.tempDetails span {
   font-size: 3rem;
   font-weight: 800;
   line-height: 1.1;
 }
 
-.tempBlock .prop small {
+.tempDetails small {
   font-size: 0.85rem;
   opacity: 0.8;
   font-weight: 400;
 }
 
-.descriptionCard {
-  background-image: linear-gradient(to bottom, rgba(13, 225, 165, 0.1), rgba(13, 225, 165, 0.1)) !important;
-
-}
-.tempBlockCard {
-  background-image: linear-gradient(to bottom, rgba(225, 13, 84, 0.1), rgba(225, 13, 84, 0.1)) !important;
-
-}
-.windSpeedCard {
-  background-image: linear-gradient(to bottom, rgba(127, 15, 129, 0.1), rgba(127, 15, 129, 0.1)) !important;
-}
-.pressureCard {
-  background-image: linear-gradient(to bottom, rgba(225, 193, 13, 0.1), rgba(225, 193, 13, 0.1)) !important;
-
-}
+.tempBlockCard,
+.windSpeedCard,
+.pressureCard,
 .humidityCard {
-  background-image: linear-gradient(to bottom, rgba(13, 150, 225, 0.1), rgba(13, 150, 225, 0.1 ) )  !important;
-
+  background-color: transparent;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(211, 211, 211, 0.3);
+  width: 200px;
+  min-height: 200px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
-@media (max-width: 768px) {
-  .weatherDataContainer {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    gap: 16px;
-  }
-  .description, .tempBlock, .windSpeed, .pressure, .humidity {
-    grid-area: auto;
-    min-height: 140px;
-  }
+.humidityCard{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
-.description > div,
+.humidityCard p{
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin: 0;
+}
+.circleWrapper {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.humidityCircle .CircularProgressbar-path {
+}
+
 .tempBlock > div,
 .windSpeed > div,
 .pressure > div,
 .humidity > div {
   height: 100%;
 }
-.tempBlockCard svg {
-  margin-bottom: 5px;
+
+.tempIcon{
+  margin-right: -25px;
+}
+.prop svg{
+  filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.5));
+}
+
+
+
+
+@media (max-width: 768px) {
+  .weatherDataContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+  .humidityCard{
+    justify-content: space-around;
+  }
+  .circleWrapper{
+    width: 100px;
+    height: 100px;
+  }
+
+  .tempBlockCard,
+  .windSpeedCard,
+  .pressureCard,
+  .humidityCard {
+    width: 300px;
+    max-width: 350px;
+  }
+
+  .tempAndDesc {
+    flex-direction: row;
+    gap: 24px;
+  }
 }

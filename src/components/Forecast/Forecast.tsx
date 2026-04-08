@@ -1,26 +1,25 @@
 import css from "./Forecast.module.css";
-import {GlassCard} from "@mawtech/glass-ui";
 import {GlowCapture, Glow} from "@codaworks/react-glow";
 import type {ForecastItem} from "../../types/WeatherData";
 import {getWeatherIcon} from "../../helpers/weatherIcon.tsx";
-
-
-
+import { useTranslation } from "react-i18next";
 
 export default function Forecast ({forecastData}: {forecastData: ForecastItem[]}){
-const formatDate = (dateString: string) =>{
-    const date = new Date(dateString)
-    return date.toLocaleDateString('ru-RU', {weekday: 'long', day: 'numeric', month: 'long'})
+    const { t, i18n } = useTranslation();
+    const formatDate = (dateString: string) =>{
+        const date = new Date(dateString)
+        const currentLang = i18n.language || 'en';
+        const locale = currentLang.startsWith('ru') ? 'ru-RU' : currentLang.startsWith('fr') ? 'fr-FR' : 'en-US';
+        return date.toLocaleDateString(locale, {weekday: 'long', day: 'numeric', month: 'long'})
     }
     if(!forecastData.length){
         return null;
     }
     return(
         <section className={css.forecastSection}>
-            <h3 className={css.forecastTitle}>Прогноз на 5 дней</h3>
+            <h3 className={css.forecastTitle}>{t('forecast5Days')}</h3>
             <GlowCapture>
                 <Glow>
-                <GlassCard className={css.glassCard}>
                 <div className = {css.forecastContainer}>
                     {forecastData.map((day) => (
                         <div key={day.dt} className={css.dayItem}>
@@ -33,7 +32,6 @@ const formatDate = (dateString: string) =>{
                         </div>
                     ))}
                 </div>
-            </GlassCard>
                 </Glow>
 
             </GlowCapture>
