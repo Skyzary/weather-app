@@ -15,6 +15,7 @@ export default function VillageSearchField() {
         if (!city.trim()){
             return;
         }
+
         const handler = setTimeout(() => {
             fetchWeather(city);
         }, 500);
