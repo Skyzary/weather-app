@@ -1,5 +1,5 @@
 ## Base image
-FROM node:20-alpine AS base
+FROM node:25-alpine AS base
 WORKDIR /app
 RUN npm i -g pnpm
 COPY  package*.json ./
