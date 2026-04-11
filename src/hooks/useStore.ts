@@ -61,8 +61,8 @@ export const useStore = create<Store>()(
                         cityFound: true
                     });
 
-                    get().fetchImage(coords.name);
-                    get().foreCast(coords.name);
+                    await get().fetchImage(coords.name);
+                    await get().foreCast(coords.name);
                 } catch (error) {
                     set({
                         loading: false,
