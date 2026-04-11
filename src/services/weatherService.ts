@@ -1,10 +1,11 @@
 import axios from "axios";
+import iziToast from 'izitoast'
 import type {CityCoords, CurrentWeatherData, ForecastData} from '../types/WeatherData'
+import i18n from '../i18n'
 
 const geoUrl = 'https://api.openweathermap.org/geo/1.0/direct'
 const weatherUrl = 'https://api.openweathermap.org/data/2.5/weather'
 const forecastUrl = 'https://api.openweathermap.org/data/2.5/forecast'
-const accessKey = import.meta.env.VITE_API_KEY
 
 export const  weatherService = {
     /** 
@@ -14,6 +15,7 @@ export const  weatherService = {
 
 
     async getGeo(city: string): Promise<CityCoords | undefined> {
+        const accessKey = import.meta.env.VITE_API_KEY
         const params = {
             q: city,
             limit: 1,
@@ -29,10 +31,15 @@ export const  weatherService = {
                         name: response.data[0].name
                     } as CityCoords)
                 }
+                iziToast.error({ message: i18n.t('cityNotFound') })
             }
             return undefined
 
         } catch (error) {
+            if (axios.isAxiosError(error) && error.response?.status === 401) {
+                iziToast.error({ message: i18n.t('authErrorWeather') })
+                return undefined
+            }
             throw new Error('Error fetching weather data: ' + error)
         }
 
@@ -42,6 +49,7 @@ export const  weatherService = {
         /**
          * @param coords - {lat, lon}
          * @returns - CurrentWeatherData */
+        const accessKey = import.meta.env.VITE_API_KEY
         if (!coords || !Number.isFinite(coords.lat) || !Number.isFinite(coords.lon)){
             throw new Error('Invalid coordinates')
         }
@@ -54,7 +62,7 @@ export const  weatherService = {
                 lon: coords.lon,
                 appid: accessKey,
                 units: "metric",
-                lang: "ru"
+                lang: i18n.language?.split('-')[0] || "en"
             }
             const response = await axios.get(weatherUrl, {params})
             return response.data as CurrentWeatherData
@@ -63,27 +71,28 @@ export const  weatherService = {
         }
     },
 
-    async getForecast(coords: CityCoords) {
+    async getForecast(coords?: CityCoords) {
         /**
          * @param coords - {lat, lon}
          * @returns - ForecastData */
+        const accessKey = import.meta.env.VITE_API_KEY
         if (!coords) return undefined;
         if (!accessKey) throw new Error('API key is not defined');
         const params = {
             lat: coords.lat,
             lon: coords.lon,
-            appid: import.meta.env.VITE_API_KEY,
+            appid: accessKey,
             units: "metric",
-            lang: "ru"
+            lang: i18n.language?.split('-')[0] || "en"
         }
         try {
             const response = await axios.get(forecastUrl, {params})
             return  response.data as ForecastData
-
-
-
-
-    }  catch (error) {
+        }  catch (error) {
+            if (axios.isAxiosError(error) && error.response?.status === 401) {
+                iziToast.error({ message: i18n.t('authError') })
+                return undefined
+            }
             throw new Error('Error fetching weather data: ' + error)
         }
     }

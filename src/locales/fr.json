@@ -1,0 +1,24 @@
+{
+  "translation": {
+    "cityNotFound": "Ville introuvable",
+    "authErrorWeather": "Weather: Erreur d'autorisation",
+    "authErrorUnsplash": "Unsplash: Erreur d'autorisation",
+    "authError": "Erreur d'autorisation",
+    "weatherInCity": "Météo à : {{city}}",
+    "weatherInCityImageAlt": "Météo à {{city}}",
+    "temperature": "Température",
+    "feelsLike": "Ressenti : {{temp}}°C",
+    "description": "Description",
+    "noDescription": "Aucune description",
+    "humidity": "Humidité",
+    "windSpeed": "Vitesse du vent",
+    "ms": "m/s",
+    "unavailable": "Indisponible",
+    "pressure": "Pression",
+    "hpa": "hPa",
+    "enterCityName": "Entrez le nom de la ville ou du village",
+    "searchCity": "Rechercher une ville",
+    "forecast5Days": "Prévisions sur 5 jours",
+    "error": "Erreur"
+  }
+}

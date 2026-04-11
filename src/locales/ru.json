@@ -1,0 +1,24 @@
+{
+  "translation": {
+    "cityNotFound": "Город не найден",
+    "authErrorWeather": "Weather: Ошибка авторизации",
+    "authErrorUnsplash": "Unsplash: Ошибка авторизации",
+    "authError": "Ошибка авторизации",
+    "weatherInCity": "Погода в городе: {{city}}",
+    "weatherInCityImageAlt": "Погода в городе {{city}}",
+    "temperature": "Температура",
+    "feelsLike": "Ощущается как: {{temp}}°C",
+    "description": "Описание",
+    "noDescription": "Нет описания",
+    "humidity": "Влажность",
+    "windSpeed": "Скорость ветра",
+    "ms": "м/с",
+    "unavailable": "Недоступно",
+    "pressure": "Давление",
+    "hpa": "гПа",
+    "enterCityName": "Введите название города или деревни",
+    "searchCity": "Поиск города",
+    "forecast5Days": "Прогноз на 5 дней",
+    "error": "Ошибка"
+  }
+}

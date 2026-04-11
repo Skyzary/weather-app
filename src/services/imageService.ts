@@ -1,9 +1,8 @@
 import axios from "axios";
+import iziToast from "izitoast";
+import i18n from '../i18n';
 
 const BASE_URL = "https://api.unsplash.com/search/photos";
-const accessKey = import.meta.env.VITE_UNSPLASH_ACCESS_KEY
-
-
 export const imageService = {
     /**
      * @Param city - village name for search
@@ -11,13 +10,14 @@ export const imageService = {
      */
 
     getCityImage: async (city: string) => {
+        const currentKey = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
         if (!city) return undefined;
-        if (!accessKey || !accessKey.length ) throw new Error('API key is not defined')
+        if (!currentKey || !currentKey.length ) throw new Error('API key is not defined')
 
 
         const params = {
             query: city,
-            client_id: accessKey,
+            client_id: currentKey,
             per_page: 1,
             orientation: "landscape",
         };
@@ -35,11 +35,14 @@ export const imageService = {
 
                 return {
                     imageUrl: optimizeUrl.toString(),
-                    imageAlt: result.alt_description || `Погода в городе ${city}`
+                    imageAlt: result.alt_description || i18n.t('weatherInCityImageAlt', { city })
                 };
             }
             return undefined;
         } catch (error) {
+            if (axios.isAxiosError(error) && error.response?.status === 401) {
+                iziToast.error({ message: i18n.t('authErrorUnsplash') })
+            }
             console.error("Error fetching image from Unsplash:", error);
             return undefined;
         }
