@@ -117,7 +117,7 @@ export const weatherService = {
         }
     },
 
-    async getForecast(coords: CityCoords): Promise<ForecastData | undefined> {
+    async getForecast(coords: CityCoords | undefined): Promise<ForecastData | undefined> {
         /**
          * @param coords - {lat, lon}
          * @returns - ForecastData */
