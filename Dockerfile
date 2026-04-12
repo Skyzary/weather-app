@@ -10,10 +10,12 @@ COPY . .
 RUN pnpm run test --coverage
 ## Build stage
 FROM base AS build-stage
+ARG VITE_API_KEY
+ARG VITE_UNSPLASH_ACCESS_KEY
+ENV VITE_API_KEY=$VITE_API_KEY
+ENV VITE_UNSPLASH_ACCESS_KEY=$VITE_UNSPLASH_ACCESS_KEY
 COPY . .
-COPY .env ./
-
-RUN ls -la .env && pnpm run build
+RUN pnpm run build
 ## Nginx setup
 FROM nginx:stable-alpine
 RUN rm -rf /usr/share/nginx/html/*

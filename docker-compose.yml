@@ -2,6 +2,9 @@ services:
   weather-app:
     build:
       context: .
+      args:
+        - VITE_API_KEY=0200e9f389133eb5ad6945cbab0b7c74
+        - VITE_UNSPLASH_ACCESS_KEY=nu6mIrmbF7f9tU-DbwxR5VcHqDjAXrq6-g-PSJTptzg
       dockerfile: Dockerfile
     container_name: weather-app
     ports:
