@@ -6,6 +6,7 @@ COPY  package*.json ./
 RUN pnpm i
 ## Test stage
 FROM base AS test-stage
+COPY . .
 RUN pnpm run test --coverage
 ## Build stage
 FROM base AS build-stage
