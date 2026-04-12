@@ -3,6 +3,7 @@ FROM node:20-alpine AS base
 WORKDIR /app
 RUN npm i -g pnpm
 COPY  package*.json ./
+COPY .env ./
 RUN pnpm i
 ## Test stage
 FROM base AS test-stage
