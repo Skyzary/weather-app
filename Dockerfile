@@ -3,7 +3,6 @@ FROM node:20-alpine AS base
 WORKDIR /app
 RUN npm i -g pnpm
 COPY  package*.json ./
-COPY .env ./
 RUN pnpm i
 ## Test stage
 FROM base AS test-stage
@@ -12,7 +11,9 @@ RUN pnpm run test --coverage
 ## Build stage
 FROM base AS build-stage
 COPY . .
-RUN pnpm run build
+COPY .env ./
+
+RUN ls -la .env && pnpm run build
 ## Nginx setup
 FROM nginx:stable-alpine
 RUN rm -rf /usr/share/nginx/html/*
