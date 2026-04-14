@@ -2,7 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useStore } from './useStore'
 import { weatherService } from '../services/weatherService'
 import { imageService } from '../services/imageService'
-import type { CurrentWeatherData, ForecastData } from '../types/WeatherData'
+import iziToast from 'izitoast'
+import type { CurrentWeatherData, ForecastData, CityCoords } from '../types/WeatherData'
 
 vi.mock('../services/weatherService')
 vi.mock('../services/imageService')
@@ -27,8 +28,8 @@ describe('useStore', () => {
   })
 
   it('should fetch weather and update state correctly', async () => {
-    const mockCoords = { lat: 51.5, lon: -0.12, name: 'London' }
-    const mockWeather = { main: { temp: 15 }, name: 'London' } as unknown as CurrentWeatherData
+    const mockCoords = { lat: 51.5, lon: -0.12, name: 'London' } as CityCoords
+    const mockWeather = { main: { temp: 15 }, name: 'London', weather: [{description: 'clear', icon: '01d'}] } as unknown as CurrentWeatherData
     const mockImage = { imageUrl: 'url', imageAlt: 'alt' }
     const mockForecast = { list: [] } as unknown as ForecastData
 
@@ -45,8 +46,8 @@ describe('useStore', () => {
     expect(state.loading).toBe(false)
   })
 
-  it('should handle city not found', async () => {
-    vi.mocked(weatherService.getGeo).mockResolvedValue(undefined)
+  it('should handle city not found error from service', async () => {
+    vi.mocked(weatherService.getGeo).mockRejectedValue(new Error('cityNotFound'))
 
     await useStore.getState().fetchWeather('UnknownCity')
 
@@ -54,5 +55,20 @@ describe('useStore', () => {
     expect(state.cityFound).toBe(false)
     expect(state.weatherData).toBeNull()
     expect(state.loading).toBe(false)
+    expect(iziToast.error).toHaveBeenCalledWith(expect.objectContaining({
+      message: expect.stringContaining('cityNotFound')
+    }))
+  })
+
+  it('should handle auth error from service', async () => {
+    vi.mocked(weatherService.getGeo).mockRejectedValue(new Error('authErrorWeather'))
+
+    await useStore.getState().fetchWeather('London')
+
+    const state = useStore.getState()
+    expect(state.cityFound).toBe(false)
+    expect(iziToast.error).toHaveBeenCalledWith(expect.objectContaining({
+      message: expect.stringContaining('authErrorWeather')
+    }))
   })
 })
