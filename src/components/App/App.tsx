@@ -2,8 +2,6 @@ import VillageSearchField from "../VillageSearchField/VillageSearchField";
 import WeatherData from "../WeatherData/WeatherData";
 import css from "./App.module.css";
 import "../../index.css";
-import IziToast from "izitoast";
-import { useEffect } from "react";
 import { useStore } from "../../hooks/useStore";
 import '@mawtech/glass-ui/styles.css';
 import Forecast from "../Forecast/Forecast.tsx";
@@ -16,20 +14,11 @@ export default function App() {
   const { t } = useTranslation();
   const weatherData = useStore((state) => state.weatherData);
   const loading = useStore((state) => state.loading);
-  const cityFound = useStore((state) => state.cityFound);
   const forecastData = useStore((state) => state.forecastData);
   const cityImage = useStore((state) => state.cityImage);
   const fetchWeather = useStore((state) => state.fetchWeather);
 
-  useEffect(() => {
-    if (!cityFound) {
-      IziToast.error({
-        title: t("error"),
-        message: t("cityNotFound"),
-        position: "topCenter"
-      });
-    }
-  }, [cityFound, t]);
+
 
   const onLanguageChange = () => {
     if (weatherData?.name) {

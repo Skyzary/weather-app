@@ -19,6 +19,8 @@
     "enterCityName": "Введіть назву міста або села",
     "searchCity": "Пошук міста",
     "forecast5Days": "Прогноз на 5 днів",
-    "error": "Помилка"
+    "error": "Помилка",
+    "imageError": "Помилка зображення",
+    "forecastError": "Помилка прогнозу"
   }
 }

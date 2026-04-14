@@ -1,5 +1,4 @@
 import axios from "axios";
-import iziToast from "izitoast";
 import i18n from '../i18n';
 
 const BASE_URL = "https://api.unsplash.com/search/photos";
@@ -53,11 +52,7 @@ export const imageService = {
             if (axios.isCancel(error)) return undefined;
             if (axios.isAxiosError(error) && error.message) {
                 if (error.response?.status === 401) {
-                    iziToast.error({
-                        title: "Ошибка",
-                        message: i18n.t('authErrorUnsplash'),
-                        position: "topCenter",
-                    })
+                    throw new Error('authErrorUnsplash')
                 }
                 if (error.response?.status !== 401) {
                     throw new Error(
@@ -66,7 +61,7 @@ export const imageService = {
                     );
                 }
                 }
-            return undefined
+            throw error;
 
         }
     }

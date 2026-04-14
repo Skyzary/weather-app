@@ -19,6 +19,8 @@
     "enterCityName": "Enter city or village name",
     "searchCity": "Search city",
     "forecast5Days": "5-day forecast",
-    "error": "Error"
+    "error": "Error",
+    "imageError": "Image error",
+    "forecastError": "Forecast error"
   }
 }

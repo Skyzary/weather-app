@@ -1,7 +1,5 @@
 import axios from "axios";
-import iziToast from 'izitoast'
 import type {CityCoords, CurrentWeatherData, ForecastData} from '../types/WeatherData'
-import i18n from '../i18n'
 
 const geoUrl = 'https://api.openweathermap.org/geo/1.0/direct'
 const weatherUrl = 'https://api.openweathermap.org/data/2.5/weather'
@@ -37,23 +35,21 @@ export const weatherService = {
                         name: response.data[0].name
                     } as CityCoords)
                 } else {
-                    iziToast.error({message: i18n.t('cityNotFound')})
+                    throw new Error('cityNotFound')
                 }
             }
             return undefined
 
         } catch (error) {
             if (error instanceof Error) {
+                if (error.message === 'cityNotFound') throw error;
                 console.log('Error is' + error.message, error.cause)
 
             }
             if (axios.isCancel(error)) return Promise.reject('Request aborted');
             if (axios.isAxiosError(error) && error.message) {
                 if (error?.response?.status === 401) {
-                    iziToast.error({
-                        message: i18n.t('authErrorWeather'),
-                        position: "topCenter",
-                    })
+                    throw new Error('authErrorWeather')
                 }
                 if (error.response?.status !== 401) {
                     throw new Error(
@@ -62,13 +58,13 @@ export const weatherService = {
                     );
                 }
             }
-
+            throw error;
         }
 
 
     },
 
-    async fetchWeather(coords: CityCoords): Promise<CurrentWeatherData | undefined> {
+    async fetchWeather(coords: CityCoords, language: string = "en"): Promise<CurrentWeatherData | undefined> {
         /**
          * @param coords - {lat, lon}
          * @returns - CurrentWeatherData */
@@ -90,7 +86,7 @@ export const weatherService = {
                 lon: coords.lon,
                 appid: accessKey,
                 units: "metric",
-                lang: i18n.language?.split('-')[0] || "en"
+                lang: language
             }
             const response = await axios.get(weatherUrl, {params, signal: this.abortController.signal})
             return response.data
@@ -101,11 +97,7 @@ export const weatherService = {
             if (axios.isCancel(error)) return Promise.reject('Request aborted');
             if (axios.isAxiosError(error) && error.message) {
                 if (error?.response?.status === 401) {
-                    iziToast.error({
-                        title: "Ошибка",
-                        message: i18n.t('authErrorWeather'),
-                        position: "topCenter",
-                    })
+                    throw new Error('authErrorWeather')
                 }
                 if (error.response?.status !== 401) {
                     throw new Error(
@@ -114,10 +106,11 @@ export const weatherService = {
                     );
                 }
             }
+            throw error;
         }
     },
 
-    async getForecast(coords: CityCoords | undefined): Promise<ForecastData | undefined> {
+    async getForecast(coords: CityCoords | undefined, language: string = "en"): Promise<ForecastData | undefined> {
         /**
          * @param coords - {lat, lon}
          * @returns - ForecastData */
@@ -133,7 +126,7 @@ export const weatherService = {
             lon: coords.lon,
             appid: accessKey,
             units: "metric",
-            lang: i18n.language?.split('-')[0] || "en"
+            lang: language
         }
         try {
             const response = await axios.get(forecastUrl, {params, signal: this.abortController.signal})
@@ -147,10 +140,7 @@ export const weatherService = {
             if (axios.isCancel(error)) return Promise.reject('Request aborted');
             if (axios.isAxiosError(error) && error.message) {
                 if (error?.response?.status === 401) {
-                    iziToast.error({
-                        message: i18n.t('authError'),
-                        position: "topCenter",
-                    })
+                    throw new Error('authError')
                 }
                 console.log('Error is' + error.message, error.cause)
                 if (error.response?.status !== 401) {
@@ -162,8 +152,7 @@ export const weatherService = {
 
 
             }
+            throw error;
         }
     }
 }
-
-

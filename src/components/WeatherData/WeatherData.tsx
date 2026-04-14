@@ -5,8 +5,9 @@ import { Glow, GlowCapture } from "@codaworks/react-glow";
 import { getWeatherIcon } from "../../helpers/weatherIcon.tsx";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { useState, useEffect, useRef, memo } from "react";
+import { memo } from "react";
 import { useTranslation } from "react-i18next";
+import {useAnimate} from "../../hooks/useAnimate.ts";
 
 interface WeatherDataProps {
   data: {
@@ -30,63 +31,9 @@ interface WeatherDataProps {
 function WeatherData({ data }: WeatherDataProps) {
   const { t } = useTranslation();
   const weather = data.weather?.[0];
-  const [humidity, setHumidity] = useState(0);
 
-  const requestRef = useRef<number | null>(null);
-  const startTimeRef = useRef<number | null>(null);
-  const displayValueRef = useRef(0);
-  const isInitialMount = useRef(true);
+ const humidity = useAnimate(data.main.humidity, 1000);
 
-  useEffect(() => {
-    const targetValue = data.main.humidity;
-    const startValue = displayValueRef.current;
-    const duration = 1000;
-    let timeoutId: number | undefined;
-
-    const animate = (time: number) => {
-      if (startTimeRef.current === null) {
-        startTimeRef.current = time;
-      }
-
-      if (startTimeRef.current !== null) {
-        const elapsedTime = time - startTimeRef.current;
-        const progress = Math.min(elapsedTime / duration, 1);
-        const easeProgress = progress * (2 - progress);
-
-        const currentValue = startValue + (targetValue - startValue) * easeProgress;
-        displayValueRef.current = currentValue;
-        setHumidity(Math.round(currentValue));
-
-        if (progress < 1) {
-          requestRef.current = requestAnimationFrame(animate);
-        }
-      }
-    };
-
-    const startAnimation = () => {
-      startTimeRef.current = null;
-      if (requestRef.current !== null) {
-        cancelAnimationFrame(requestRef.current);
-      }
-      requestRef.current = requestAnimationFrame(animate);
-    };
-
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      timeoutId = setTimeout(startAnimation, 300);
-    } else {
-      startAnimation();
-    }
-
-    return () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-      if (requestRef.current !== null) {
-        cancelAnimationFrame(requestRef.current);
-      }
-    };
-  }, [data.main.humidity]);
 
   return (
       <GlowCapture>
@@ -109,6 +56,7 @@ function WeatherData({ data }: WeatherDataProps) {
                     {getWeatherIcon(weather?.icon)}
                     <p>{t('description')}</p>
                     <span>{weather?.description || t('noDescription')}</span>
+
                   </div>
                 </div>
               </div>

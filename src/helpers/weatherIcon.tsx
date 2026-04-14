@@ -11,6 +11,14 @@ import {
 import {FaInfoCircle} from "react-icons/fa";
 import type {ReactElement} from "react";
 
+/**
+ * Weather icons for different weather conditions.
+ * @example
+ * <WiDaySunny size={48}/>
+ * <WiNightClear size={48}/>
+ * <WiCloud size={48}/>
+ */
+
 export const weatherIcons: Record<string, ReactElement> = {
     "01d": <WiDaySunny size={48}/>,
     "01n": <WiNightClear size={48}/>,

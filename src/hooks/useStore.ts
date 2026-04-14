@@ -4,6 +4,8 @@ import type { CurrentWeatherData, ForecastItem, ForecastData, CityCoords } from 
 import { weatherService } from '../services/weatherService';
 import { imageService } from '../services/imageService';
 import iziToast from "izitoast";
+import i18n from "../i18n";
+
 
 interface Store {
     city: string;
@@ -20,9 +22,8 @@ interface Store {
         imageAlt: string;
     };
 }
-
 export const useStore = create<Store>()(
-    persist(
+persist(
         (set, get) => ({
             city: "",
             setCity: (city) => set({ city }),
@@ -32,12 +33,12 @@ export const useStore = create<Store>()(
             cityFound: true,
 
             fetchWeather: async (city: string) => {
-                if (!city) return;
                 set({
                     loading: true,
                     cityFound: true,
                     forecastData: null,
                     cityImage: undefined
+                    
                 });
 
                 try {
@@ -53,7 +54,7 @@ export const useStore = create<Store>()(
                         return;
                     }
 
-                    const weatherData = await weatherService.fetchWeather(coords);
+                    const weatherData = await weatherService.fetchWeather(coords, i18n.language?.split('-')[0] || "en");
 
                     set({
                         loading: false,
@@ -62,13 +63,25 @@ export const useStore = create<Store>()(
                     });
 
                     await get().fetchImage(coords.name);
-                    await get().foreCast(coords.name);
+                    await get().foreCast(coords);
                 } catch (error) {
                     set({ loading: false, cityFound: false, weatherData: null });
                     if (error instanceof Error) {
+                        let messageKey = "error";
+                        switch (error.message) {
+                            case "cityNotFound":
+                                messageKey = "cityNotFound";
+                                break;
+                            case "authErrorWeather":
+                                messageKey = "authErrorWeather";
+                                break;
+                            default:
+                                messageKey = "error";
+                                break;
+                        }
                         iziToast.error({
-                            title: "Ошибка",
-                            message: error.message,
+                            title: i18n.t("error"),
+                            message: i18n.t(messageKey),
                             position: "topCenter",
                             timeout: 5000
                         });
@@ -86,9 +99,18 @@ export const useStore = create<Store>()(
                 } catch (error) {
                     set({ cityImage: undefined });
                     if (error instanceof Error) {
+                        let messageKey = "imageError";
+                        switch (error.message) {
+                            case "authErrorUnsplash":
+                                messageKey = "authErrorUnsplash";
+                                break;
+                            default:
+                                messageKey = "imageError";
+                                break;
+                        }
                         iziToast.error({
-                            title: "Ошибка изображения",
-                            message: error.message,
+                            title: i18n.t("imageError"),
+                            message: i18n.t(messageKey),
                             position: "topCenter",
                             timeout: 5000
                         });
@@ -98,7 +120,7 @@ export const useStore = create<Store>()(
 
             foreCast: async (coords: CityCoords): Promise<void> => {
                 try {
-                    const forecastResponse = await weatherService.getForecast(coords) as ForecastData | undefined;
+                    const forecastResponse = await weatherService.getForecast(coords, i18n.language?.split('-')[0] || "en") as ForecastData | undefined;
 
                     if (forecastResponse && forecastResponse.list) {
                         const dailyData: ForecastItem[] = forecastResponse.list.filter((reading: ForecastItem) => {
@@ -110,9 +132,18 @@ export const useStore = create<Store>()(
                     }
                 } catch (error) {
                     if (error instanceof Error) {
+                        let messageKey = "forecastError";
+                        switch (error.message) {
+                            case "authError":
+                                messageKey = "authError";
+                                break;
+                            default:
+                                messageKey = "forecastError";
+                                break;
+                        }
                         iziToast.error({
-                            title: "Ошибка прогноза",
-                            message: error.message,
+                            title: i18n.t("forecastError"),
+                            message: i18n.t(messageKey),
                             position: "topCenter",
                             timeout: 5000
                         });

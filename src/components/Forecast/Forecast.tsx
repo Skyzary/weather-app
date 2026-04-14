@@ -3,15 +3,11 @@ import {GlowCapture, Glow} from "@codaworks/react-glow";
 import type {ForecastItem} from "../../types/WeatherData";
 import {getWeatherIcon} from "../../helpers/weatherIcon.tsx";
 import { useTranslation } from "react-i18next";
+import { formatDate } from "../../helpers/dateUtils";
 
 export default function Forecast ({forecastData}: {forecastData: ForecastItem[]}){
     const { t, i18n } = useTranslation();
-    const formatDate = (dateString: string) =>{
-        const date = new Date(dateString)
-        const currentLang = i18n.language || 'en';
-        const locale = currentLang.startsWith('ru') ? 'ru-RU' : currentLang.startsWith('fr') ? 'fr-FR' : 'en-US';
-        return date.toLocaleDateString(locale, {weekday: 'long', day: 'numeric', month: 'long'})
-    }
+
     if(!forecastData.length){
         return null;
     }
@@ -23,7 +19,7 @@ export default function Forecast ({forecastData}: {forecastData: ForecastItem[]}
                 <div className = {css.forecastContainer}>
                     {forecastData.map((day) => (
                         <div key={day.dt} className={css.dayItem}>
-                            <span className={css.date}>{formatDate(day.dt_txt)}</span>
+                            <span className={css.date}>{formatDate(day.dt_txt, i18n.language)}</span>
                             <div className={css.icon}>
                                 {getWeatherIcon(day.weather[0].icon)}
                             </div>
