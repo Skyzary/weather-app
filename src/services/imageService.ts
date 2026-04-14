@@ -3,27 +3,32 @@ import iziToast from "izitoast";
 import i18n from '../i18n';
 
 const BASE_URL = "https://api.unsplash.com/search/photos";
+const accessKey = import.meta.env.VITE_UNSPLASH_ACCESS_KEY
+
+
 export const imageService = {
     /**
-     * @Param city - village name for search
+     * @param city - village name for search
      * @returns - {imageUrl, imageAlt} or undefined if error
      */
+     abortController: new AbortController(),
 
     getCityImage: async (city: string) => {
-        const currentKey = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
         if (!city) return undefined;
-        if (!currentKey || !currentKey.length ) throw new Error('API key is not defined')
+        if (!accessKey || !accessKey.length ) throw new Error('API key is not defined')
+        if (imageService.abortController) imageService.abortController.abort()
+        imageService.abortController = new AbortController();
 
 
         const params = {
             query: city,
-            client_id: currentKey,
+            client_id: accessKey,
             per_page: 1,
             orientation: "landscape",
         };
 
         try {
-            const response = await axios.get(BASE_URL, { params });
+            const response = await axios.get(BASE_URL, { params, signal: imageService.abortController.signal });
             const result = response.data.results[0];
 
             if (result) {
@@ -40,11 +45,29 @@ export const imageService = {
             }
             return undefined;
         } catch (error) {
-            if (axios.isAxiosError(error) && error.response?.status === 401) {
-                iziToast.error({ message: i18n.t('authErrorUnsplash') })
+
+            if(error instanceof Error){
+                console.log('Error is' + error.message, error.cause)
+
             }
-            console.error("Error fetching image from Unsplash:", error);
-            return undefined;
+            if (axios.isCancel(error)) return undefined;
+            if (axios.isAxiosError(error) && error.message) {
+                if (error.response?.status === 401) {
+                    iziToast.error({
+                        title: "Ошибка",
+                        message: i18n.t('authErrorUnsplash'),
+                        position: "topCenter",
+                    })
+                }
+                if (error.response?.status !== 401) {
+                    throw new Error(
+                        `Error fetching image data: ${error.message} `,
+                        { cause: error }
+                    );
+                }
+                }
+            return undefined
+
         }
     }
-}
+};

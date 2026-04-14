@@ -1,8 +1,8 @@
 * {
   box-sizing: border-box;
-    color: white;
 }
 body {
+  color: white;
   font-family: Montserrat, sans-serif;
   background-color: #000000;
   background-size: cover;
