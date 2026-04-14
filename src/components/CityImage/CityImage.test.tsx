@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import CityImage from './CityImage'
 
 describe('CityImage', () => {
@@ -17,8 +17,29 @@ describe('CityImage', () => {
     expect(imgs[0]).toHaveAttribute('alt', props.imageAlt)
   })
 
-  it('should return null if imageUrl is missing', () => {
-    const { container } = render(<CityImage imageUrl="" imageAlt="Test" />)
-    expect(container.firstChild).toBeNull()
+  it('should render fallback image if imageUrl is missing', () => {
+    render(<CityImage imageUrl="" imageAlt="Test" />)
+    const imgs = screen.getAllByRole('img')
+    expect(imgs.length).toBeGreaterThan(0)
+    expect(imgs[0]).toHaveAttribute('src', '/bg.avif')
+    expect(imgs[0]).toHaveAttribute('alt', 'Test')
+  })
+
+  it('should switch to fallback image on error', () => {
+    const props = {
+      imageUrl: 'https://example.com/bad-image.jpg',
+      imageAlt: 'Test City'
+    }
+
+    render(<CityImage {...props} />)
+    const imgs = screen.getAllByRole('img')
+    const img = imgs[0]
+    
+    expect(img).toHaveAttribute('src', props.imageUrl)
+
+    // Simulate image error
+    fireEvent.error(img)
+
+    expect(img).toHaveAttribute('src', '/bg.avif')
   })
 })
