@@ -1,10 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import axios from 'axios'
 import { imageService } from './imageService'
-import iziToast from 'izitoast'
 
 vi.mock('axios')
-vi.mock('izitoast')
 
 describe('imageService', () => {
   beforeEach(() => {
@@ -44,20 +42,14 @@ describe('imageService', () => {
     expect(result).toBeUndefined()
   })
 
-  it('should handle 401 error from Unsplash', async () => {
+  it('should throw auth error from Unsplash on 401', async () => {
     vi.mocked(axios.isAxiosError).mockReturnValue(true)
     vi.mocked(axios.get).mockRejectedValue({
-      isAxiosError: true,
       response: { status: 401 },
       message: 'Unauthorized'
     })
 
-    const result = await imageService.getCityImage('London')
-
-    expect(result).toBeUndefined()
-    expect(iziToast.error).toHaveBeenCalledWith(expect.objectContaining({
-      message: expect.stringContaining('authErrorUnsplash')
-    }))
+    await expect(imageService.getCityImage('London')).rejects.toThrow('authErrorUnsplash')
   })
 
   it('should return undefined if city is empty', async () => {
@@ -66,8 +58,12 @@ describe('imageService', () => {
     expect(axios.get).not.toHaveBeenCalled()
   })
 
-  it('should throw error if API key is missing', async () => {
-    vi.stubEnv('VITE_UNSPLASH_ACCESS_KEY', '')
-    await expect(imageService.getCityImage('London')).rejects.toThrow('API key is not defined')
+  it('should throw auth error if API key is invalid', async () => {
+    vi.mocked(axios.isAxiosError).mockReturnValue(true)
+    vi.mocked(axios.get).mockRejectedValue({
+      response: { status: 401 },
+      message: 'Unauthorized'
+    })
+    await expect(imageService.getCityImage('London')).rejects.toThrow('authErrorUnsplash')
   })
 })

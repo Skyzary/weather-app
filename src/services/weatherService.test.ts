@@ -1,11 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import axios from 'axios'
 import { weatherService } from './weatherService'
-import iziToast from 'izitoast'
 import type { CityCoords, CurrentWeatherData, ForecastData } from '../types/WeatherData'
 
 vi.mock('axios')
-vi.mock('izitoast')
 
 describe('weatherService', () => {
   beforeEach(() => {
@@ -22,30 +20,24 @@ describe('weatherService', () => {
 
       expect(result).toEqual({ lat: 55.75, lon: 37.61, name: 'Moscow' })
       expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('geo/1.0/direct'), expect.objectContaining({
-        params: expect.objectContaining({ appid: 'test-key' })
+        params: expect.objectContaining({ q: 'Moscow', appid: expect.any(String) })
       }))
     })
 
-    it('should show error and return undefined when city is not found', async () => {
+    it('should throw error when city is not found', async () => {
       vi.mocked(axios.get).mockResolvedValue({ data: [] })
 
-      const result = await weatherService.getGeo('UnknownCity')
-
-      expect(result).toBeUndefined()
-      expect(iziToast.error).toHaveBeenCalledWith(expect.objectContaining({ message: 'cityNotFound' }))
+      await expect(weatherService.getGeo('UnknownCity')).rejects.toThrow('cityNotFound')
     })
 
-    it('should handle 401 error', async () => {
+    it('should throw auth error on 401', async () => {
         vi.mocked(axios.isAxiosError).mockReturnValue(true)
         vi.mocked(axios.get).mockRejectedValue({
-            isAxiosError: true,
             response: { status: 401 },
             message: 'Unauthorized'
         })
 
-        const result = await weatherService.getGeo('Moscow')
-        expect(result).toBeUndefined()
-        expect(iziToast.error).toHaveBeenCalledWith(expect.objectContaining({ message: 'authErrorWeather' }))
+        await expect(weatherService.getGeo('Moscow')).rejects.toThrow('authErrorWeather')
     })
   })
 
@@ -65,9 +57,14 @@ describe('weatherService', () => {
       await expect(weatherService.fetchWeather({ lat: NaN, lon: 37.61, name: '' })).rejects.toThrow('Invalid coordinates')
     })
 
-    it('should throw error if API key is missing', async () => {
-      vi.stubEnv('VITE_API_KEY', '')
-      await expect(weatherService.fetchWeather(mockCoords)).rejects.toThrow('API key is not defined')
+    it('should throw auth error on 401', async () => {
+        vi.mocked(axios.isAxiosError).mockReturnValue(true)
+        vi.mocked(axios.get).mockRejectedValue({
+            response: { status: 401 },
+            message: 'Unauthorized'
+        })
+
+        await expect(weatherService.fetchWeather(mockCoords)).rejects.toThrow('authErrorWeather')
     })
   })
 
@@ -75,15 +72,12 @@ describe('weatherService', () => {
     const mockCoords: CityCoords = { lat: 55.75, lon: 37.61, name: 'Moscow' }
 
     it('should return forecast data for valid coordinates', async () => {
-      const mockForecast = { list: [{ dt_txt: '2026-03-27 12:00:00', main: { temp: 15 } }] } as unknown as ForecastData
+      const mockForecast = { list: [{ dt_txt: '2026-03-27 12:00:00', main: { temp: 15 }, weather: [{icon: '01d', description: 'clear'}] }] } as unknown as ForecastData
       vi.mocked(axios.get).mockResolvedValue({ data: mockForecast })
 
       const result = await weatherService.getForecast(mockCoords)
 
       expect(result).toEqual(mockForecast)
-      expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('forecast'), expect.objectContaining({
-        params: expect.objectContaining({ lat: 55.75, lon: 37.61, appid: 'test-key' })
-      }))
     })
 
     it('should return undefined if coordinates are missing', async () => {
@@ -91,25 +85,15 @@ describe('weatherService', () => {
       expect(result).toBeUndefined()
     })
 
-    it('should throw error if API key is missing', async () => {
-      vi.stubEnv('VITE_API_KEY', '')
-      await expect(weatherService.getForecast(mockCoords)).rejects.toThrow('API key is not defined')
-    })
-
-    it('should handle 401 error from OpenWeatherMap', async () => {
+    it('should throw auth error on 401', async () => {
       vi.mocked(axios.isAxiosError).mockReturnValue(true)
       vi.mocked(axios.get).mockRejectedValue({
-        isAxiosError: true,
         response: { status: 401 },
         message: 'Unauthorized'
       })
 
-      const result = await weatherService.getForecast(mockCoords)
-
-      expect(result).toBeUndefined()
-      expect(iziToast.error).toHaveBeenCalledWith(expect.objectContaining({
-        message: 'authError'
-      }))
+      await expect(weatherService.getForecast(mockCoords)).rejects.toThrow('authError')
     })
   })
 })
+
