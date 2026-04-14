@@ -62,7 +62,7 @@ export const useStore = create<Store>()(
                     });
 
                     await get().fetchImage(coords.name);
-                    await get().foreCast(coords);
+                    await get().foreCast(coords.name);
                 } catch (error) {
                     set({ loading: false, cityFound: false, weatherData: null });
                     if (error instanceof Error) {
