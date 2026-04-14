@@ -9,7 +9,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '25'
+          node-version: '20'
       - run: npm install
-      - run: npm run test
 
+      - name: Run tests
+        run: npm run test
+        env:
+          VITE_API_KEY: "test-weather-key"
+          VITE_UNSPLASH_ACCESS_KEY: "test-unsplash-key"
