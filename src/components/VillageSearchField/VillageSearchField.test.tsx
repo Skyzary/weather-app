@@ -1,7 +1,8 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import VillageSearchField from './VillageSearchField'
 import { useStore } from '../../hooks/useStore'
+import type { Store } from '../../hooks/useStore'
 
 // Mock useStore
 vi.mock('../../hooks/useStore')
@@ -14,7 +15,7 @@ describe('VillageSearchField', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     vi.useFakeTimers()
-    vi.mocked(useStore).mockImplementation((selector: any) => {
+    vi.mocked(useStore).mockImplementation((selector: (state: Store) => unknown) => {
       const state = {
         city: '',
         setCity: mockSetCity,
@@ -22,7 +23,7 @@ describe('VillageSearchField', () => {
         suggestions: [],
         setSuggestions: mockSetSuggestions
       }
-      return selector(state)
+      return selector(state as Store)
     })
   })
 
@@ -47,7 +48,7 @@ describe('VillageSearchField', () => {
   })
 
   it('should call fetchWeather after debounce period when typing', async () => {
-    vi.mocked(useStore).mockImplementation((selector: any) => {
+    vi.mocked(useStore).mockImplementation((selector: (state: Store) => unknown) => {
       const state = {
         city: 'Kyiv',
         setCity: mockSetCity,
@@ -55,7 +56,7 @@ describe('VillageSearchField', () => {
         suggestions: [],
         setSuggestions: mockSetSuggestions
       }
-      return selector(state)
+      return selector(state as Store)
     })
 
     render(<VillageSearchField />)
@@ -82,7 +83,7 @@ describe('VillageSearchField', () => {
       { name: 'London', lat: 51.5, lon: -0.12, country: 'GB' }
     ]
 
-    vi.mocked(useStore).mockImplementation((selector: any) => {
+    vi.mocked(useStore).mockImplementation((selector: (state: Store) => unknown) => {
       const state = {
         city: 'Ky',
         setCity: mockSetCity,
@@ -90,7 +91,7 @@ describe('VillageSearchField', () => {
         suggestions: mockSuggestions,
         setSuggestions: mockSetSuggestions
       }
-      return selector(state)
+      return selector(state as Store)
     })
 
     render(<VillageSearchField />)

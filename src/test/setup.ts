@@ -55,7 +55,7 @@ import { vi } from 'vitest';
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string, options?: any) => {
+    t: (key: string, options?: Record<string, unknown>) => {
         if (key === 'feelsLike') return 'feelsLike';
         if (options && options.city) return 'weatherInCity';
         return key;

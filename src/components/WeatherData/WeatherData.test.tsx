@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import WeatherData from './WeatherData'
+import { CurrentWeatherData } from '../../types/WeatherData'
 
 vi.mock('../../helpers/weatherIcon.tsx', () => ({
   getWeatherIcon: vi.fn(() => <div data-testid="weather-icon" />)
@@ -28,10 +29,10 @@ describe('WeatherData', () => {
     wind: {
       speed: 5.5
     }
-  }
+  } as CurrentWeatherData
 
   it('renders all weather information correctly', () => {
-    render(<WeatherData data={mockData as any} />)
+    render(<WeatherData data={mockData} />)
 
     expect(screen.getAllByText(/20°C/)[0]).toBeInTheDocument()
     expect(screen.getAllByText(/feelsLike/)[0]).toBeInTheDocument()
@@ -47,8 +48,8 @@ describe('WeatherData', () => {
       main: { temp: 20, humidity: 50 },
       wind: undefined,
       weather: []
-    }
-    render(<WeatherData data={incompleteData as any} />)
+    } as unknown as CurrentWeatherData
+    render(<WeatherData data={incompleteData} />)
 
     expect(screen.getAllByText(/noDescription/)[0]).toBeInTheDocument()
     expect(screen.getAllByText(/unavailable/)[0]).toBeInTheDocument()
