@@ -2,12 +2,17 @@ import {useState, useEffect, useRef} from "react";
 
 export const useAnimate = (targetValue: number, duration: number) => {
     const [displayValue, setDisplayValue] = useState(0);
+    const displayValueRef = useRef(displayValue);
     const startTimeRef = useRef<number | null>(null);
     const startValueRef = useRef(0);
     const requestRef = useRef<number | null>(null);
 
     useEffect(() => {
-        startValueRef.current = displayValue;
+        displayValueRef.current = displayValue;
+    }, [displayValue]);
+
+    useEffect(() => {
+        startValueRef.current = displayValueRef.current;
         startTimeRef.current = null;
 
         const animate = (time: number) => {

@@ -2,6 +2,8 @@ export interface CityCoords {
   lat: number;
   lon: number;
   name: string;
+  country?: string;
+  state?: string;
 }
 
 export interface CurrentWeatherData {

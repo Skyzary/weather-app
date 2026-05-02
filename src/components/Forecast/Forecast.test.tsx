@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import Forecast from './Forecast'
+import type { ForecastItem } from '../../types/WeatherData'
 
 vi.mock('../../helpers/weatherIcon.tsx', () => ({
   getWeatherIcon: vi.fn(() => <div data-testid="weather-icon" />)
@@ -20,10 +21,10 @@ describe('Forecast', () => {
       main: { temp: 18 },
       weather: [{ description: 'облачно', icon: '03d' }]
     }
-  ]
+  ] as ForecastItem[]
 
   it('renders forecast items correctly', () => {
-    render(<Forecast forecastData={mockForecastData as any} />)
+    render(<Forecast forecastData={mockForecastData} />)
 
     expect(screen.getByText('forecast5Days')).toBeInTheDocument()
     // 2 days * 2 copies due to react-glow = 4

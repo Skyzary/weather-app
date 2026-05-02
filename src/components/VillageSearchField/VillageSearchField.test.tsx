@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import VillageSearchField from './VillageSearchField'
 import { useStore } from '../../hooks/useStore'
+import type { Store } from '../../hooks/useStore'
 
 // Mock useStore
 vi.mock('../../hooks/useStore')
@@ -13,13 +14,13 @@ describe('VillageSearchField', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     vi.useFakeTimers()
-    vi.mocked(useStore).mockImplementation((selector: any) => {
+    vi.mocked(useStore).mockImplementation((selector: (state: Store) => unknown) => {
       const state = {
         city: '',
         setCity: mockSetCity,
-        fetchWeather: mockFetchWeather
+        fetchWeather: mockFetchWeather,
       }
-      return selector(state)
+      return selector(state as unknown as Store)
     })
   })
 
@@ -36,25 +37,25 @@ describe('VillageSearchField', () => {
     render(<VillageSearchField />)
     
     const input = screen.getByPlaceholderText(/enterCityName/)
-    fireEvent.change(input, { target: { value: 'Moscow' } })
+    fireEvent.change(input, { target: { value: 'Kyiv' } })
     
-    expect(mockSetCity).toHaveBeenCalledWith('Moscow')
+    expect(mockSetCity).toHaveBeenCalledWith('Kyiv')
   })
 
-  it('should call fetchWeather after debounce period', () => {
-    vi.mocked(useStore).mockImplementation((selector: any) => {
+  it('should call fetchWeather after debounce period when typing', async () => {
+    vi.mocked(useStore).mockImplementation((selector: (state: Store) => unknown) => {
       const state = {
-        city: 'Moscow',
+        city: 'Kyiv',
         setCity: mockSetCity,
-        fetchWeather: mockFetchWeather
+        fetchWeather: mockFetchWeather,
       }
-      return selector(state)
+      return selector(state as unknown as Store)
     })
 
     render(<VillageSearchField />)
     
     vi.advanceTimersByTime(800)
     
-    expect(mockFetchWeather).toHaveBeenCalledWith('Moscow')
+    expect(mockFetchWeather).toHaveBeenCalledWith('Kyiv')
   })
 })
