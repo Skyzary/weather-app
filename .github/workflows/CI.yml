@@ -21,7 +21,7 @@ jobs:
       - name: Run linter
         run: npm run lint
 
-  registery:
+  registry:
     needs: test
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
@@ -51,4 +51,4 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/weather-app:${{ steps.calc_version.outputs.tag }}
-            ${{ secrets.DOCKER_USERNAME
+            ${{ secrets.DOCKER_USERNAME }}/weather-app:latest
