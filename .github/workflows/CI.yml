@@ -17,11 +17,11 @@ jobs:
         env:
           VITE_API_KEY: "test-weather-key"
           VITE_UNSPLASH_ACCESS_KEY: "test-unsplash-key"
-
+          
       - name: Run linter
         run: npm run lint
 
-  registry:
+  registery:
     needs: test
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
