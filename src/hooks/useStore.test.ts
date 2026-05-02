@@ -33,7 +33,7 @@ describe('useStore', () => {
     const mockImage = { imageUrl: 'url', imageAlt: 'alt' }
     const mockForecast = { list: [] } as unknown as ForecastData
 
-    vi.mocked(weatherService.getGeo).mockResolvedValue(mockCoords)
+    vi.mocked(weatherService.getGeo).mockResolvedValue([mockCoords])
     vi.mocked(weatherService.fetchWeather).mockResolvedValue(mockWeather)
     vi.mocked(imageService.getCityImage).mockResolvedValue(mockImage)
     vi.mocked(weatherService.getForecast).mockResolvedValue(mockForecast)

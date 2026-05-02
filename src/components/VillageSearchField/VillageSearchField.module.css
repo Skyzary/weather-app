@@ -11,6 +11,10 @@
   margin: 0 auto 24px;
 }
 
+.inputWrapper {
+  position: relative;
+}
+
 .searchField {
   display: block;
   width: 100%;
@@ -39,11 +43,40 @@
   transform: translateY(-50%);
 }
 
+.popularCities {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.popularCityButton {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 5px 15px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.popularCityButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
 @media (max-width: 768px) {
   .searchField {
     padding: 12px 45px;
   }
   .searchIcon {
     left: 12px;
+  }
+  .popularCityButton {
+    padding: 4px 12px;
+    font-size: 0.8rem;
   }
 }
