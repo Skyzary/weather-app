@@ -5,6 +5,7 @@ import { useStore } from '../../hooks/useStore.ts';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import SearchSuggestions from '../SearchSuggestions/SearchSuggestions.tsx';
+import { CityCoords } from '../../types/WeatherData.ts';
 
 const POPULAR_CITIES = ['Kyiv', 'London', 'Paris', 'New York', 'Tokyo'];
 
@@ -17,10 +18,12 @@ export default function VillageSearchField() {
   const setSuggestions = useStore((state) => state.setSuggestions);
   const [isVisible, setIsVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [prevSuggestions, setPrevSuggestions] = useState(suggestions);
 
-  useEffect(() => {
+  if (suggestions !== prevSuggestions) {
     setSelectedIndex(-1);
-  }, [suggestions]);
+    setPrevSuggestions(suggestions);
+  }
 
   useEffect(() => {
     if (!city.trim() || city.length < 2) {
@@ -37,7 +40,7 @@ export default function VillageSearchField() {
     setCity(e.target.value);
   };
 
-  const handleSuggestionClick = (suggestion: any) => {
+  const handleSuggestionClick = (suggestion: CityCoords) => {
     setCity(suggestion.name);
     setSuggestions([]);
     setIsVisible(false);
