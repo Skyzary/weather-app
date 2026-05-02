@@ -13,7 +13,7 @@ describe('weatherService', () => {
 
   describe('getGeo', () => {
     it('should return coordinates for a valid city', async () => {
-      const mockData = [{ lat: 55.75, lon: 37.61, name: 'Moscow' }]
+      const mockData = [{ lat: 55.75, lon: 37.61, name: 'Moscow', country: 'RU' }]
       vi.mocked(axios.get).mockResolvedValue({ data: mockData })
 
       const result = await weatherService.getGeo('Moscow')
@@ -22,7 +22,7 @@ describe('weatherService', () => {
         lat: 55.75,
         lon: 37.61,
         name: 'Moscow',
-        country: undefined,
+        country: 'RU',
         state: undefined
       }])
       expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('geo/1.0/direct'), expect.objectContaining({
@@ -48,7 +48,7 @@ describe('weatherService', () => {
   })
 
   describe('fetchWeather', () => {
-    const mockCoords: CityCoords = { lat: 55.75, lon: 37.61, name: 'Moscow' }
+    const mockCoords: CityCoords = { lat: 55.75, lon: 37.61, name: 'Moscow', country: 'RU' }
 
     it('should fetch weather for valid coordinates', async () => {
       const mockWeather = { main: { temp: 20 }, name: 'Moscow' } as unknown as CurrentWeatherData
@@ -60,7 +60,7 @@ describe('weatherService', () => {
     })
 
     it('should throw error for invalid coordinates', async () => {
-      await expect(weatherService.fetchWeather({ lat: NaN, lon: 37.61, name: '' })).rejects.toThrow('Invalid coordinates')
+      await expect(weatherService.fetchWeather({ lat: NaN, lon: 37.61, name: '', country: '' })).rejects.toThrow('Invalid coordinates')
     })
 
     it('should throw auth error on 401', async () => {
@@ -75,7 +75,7 @@ describe('weatherService', () => {
   })
 
   describe('getForecast', () => {
-    const mockCoords: CityCoords = { lat: 55.75, lon: 37.61, name: 'Moscow' }
+    const mockCoords: CityCoords = { lat: 55.75, lon: 37.61, name: 'Moscow', country: 'RU' }
 
     it('should return forecast data for valid coordinates', async () => {
       const mockForecast = { list: [{ dt_txt: '2026-03-27 12:00:00', main: { temp: 15 }, weather: [{icon: '01d', description: 'clear'}] }] } as unknown as ForecastData

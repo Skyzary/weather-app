@@ -5,7 +5,7 @@ import { useStore } from '../../hooks/useStore.ts';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import SearchSuggestions from '../SearchSuggestions/SearchSuggestions.tsx';
-import { CityCoords } from '../../types/WeatherData.ts';
+import type { CityCoords } from '../../types/WeatherData.ts';
 
 const POPULAR_CITIES = ['Kyiv', 'London', 'Paris', 'New York', 'Tokyo'];
 

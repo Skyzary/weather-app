@@ -20,7 +20,7 @@ describe('App Component', () => {
       loading: false,
       forecastData: null,
       cityImage: null
-    } as Store))
+    } as unknown as Store))
 
     render(<App />)
     expect(screen.getByTestId('search-field')).toBeInTheDocument()
@@ -33,7 +33,7 @@ describe('App Component', () => {
       loading: false,
       forecastData: [{ dt: 1 }],
       cityImage: { imageUrl: 'url' }
-    } as Store))
+    } as unknown as Store))
 
     render(<App />)
     expect(screen.getByText(/weatherInCity/)).toBeInTheDocument()
@@ -48,7 +48,7 @@ describe('App Component', () => {
       loading: true,
       forecastData: null,
       cityImage: null
-    } as Store))
+    } as unknown as Store))
 
     render(<App />)
     expect(screen.getByTestId('skeleton')).toBeInTheDocument()

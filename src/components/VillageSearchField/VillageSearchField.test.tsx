@@ -23,7 +23,7 @@ describe('VillageSearchField', () => {
         suggestions: [],
         setSuggestions: mockSetSuggestions
       }
-      return selector(state as Store)
+      return selector(state as unknown as Store)
     })
   })
 
@@ -56,7 +56,7 @@ describe('VillageSearchField', () => {
         suggestions: [],
         setSuggestions: mockSetSuggestions
       }
-      return selector(state as Store)
+      return selector(state as unknown as Store)
     })
 
     render(<VillageSearchField />)
@@ -91,7 +91,7 @@ describe('VillageSearchField', () => {
         suggestions: mockSuggestions,
         setSuggestions: mockSetSuggestions
       }
-      return selector(state as Store)
+      return selector(state as unknown as Store)
     })
 
     render(<VillageSearchField />)

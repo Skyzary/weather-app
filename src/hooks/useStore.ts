@@ -6,7 +6,7 @@ import { imageService } from '../services/imageService';
 import iziToast from 'izitoast';
 import i18n from '../i18n';
 
-interface Store {
+export interface Store {
   city: string;
   setCity: (city: string) => void;
   weatherData: CurrentWeatherData | null;
