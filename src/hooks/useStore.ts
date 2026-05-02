@@ -23,6 +23,7 @@ interface Store {
   suggestions: CityCoords[];
   setSuggestions: (suggestions: CityCoords[]) => void;
 }
+
 export const useStore = create<Store>()(
   persist(
     (set, get) => ({
