@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import WeatherData from './WeatherData'
-import type { CurrentWeatherData } from '../../types/WeatherData'
+import { CurrentWeatherData } from '../../types/WeatherData'
 
 vi.mock('../../helpers/weatherIcon.tsx', () => ({
   getWeatherIcon: vi.fn(() => <div data-testid="weather-icon" />)

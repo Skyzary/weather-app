@@ -6,25 +6,29 @@ import { imageService } from '../services/imageService';
 import iziToast from 'izitoast';
 import i18n from '../i18n';
 
-export interface Store {
+interface Store {
   city: string;
   setCity: (city: string) => void;
   weatherData: CurrentWeatherData | null;
   forecastData: ForecastItem[] | null;
   loading: boolean;
   cityFound: boolean;
-  fetchWeather: (city: string) => Promise<void>;
+  fetchWeather: (cityOrCoords: string | CityCoords) => Promise<void>;
   foreCast: (coords: CityCoords) => Promise<void>;
   fetchImage: (city: string) => Promise<void>;
   cityImage?: {
     imageUrl: string;
     imageAlt: string;
   };
+  suggestions: CityCoords[];
+  setSuggestions: (suggestions: CityCoords[]) => void;
 }
 
 export const useStore = create<Store>()(
   persist(
     (set, get) => ({
+      suggestions: [],
+      setSuggestions: (list) => set({ suggestions: list }),
       city: '',
       setCity: (city) => set({ city }),
       weatherData: null,
@@ -32,7 +36,7 @@ export const useStore = create<Store>()(
       loading: false,
       cityFound: true,
 
-      fetchWeather: async (city: string) => {
+      fetchWeather: async (cityOrCoords: string | CityCoords) => {
         set({
           loading: true,
           cityFound: true,
@@ -41,19 +45,28 @@ export const useStore = create<Store>()(
         });
 
         try {
-          const coords = await weatherService.getGeo(city);
+          let primaryCity: CityCoords;
 
-          if (!coords) {
-            set({
-              loading: false,
-              cityFound: false,
-              weatherData: null,
-              forecastData: null,
-            });
-            return;
+          if (typeof cityOrCoords === 'string') {
+            const coordsList = await weatherService.getGeo(cityOrCoords);
+            set({ suggestions: coordsList });
+
+            if (!coordsList || coordsList.length === 0) {
+              set({
+                loading: false,
+                cityFound: false,
+                weatherData: null,
+                forecastData: null,
+                suggestions: [],
+              });
+              return;
+            }
+            primaryCity = coordsList[0];
+          } else {
+            primaryCity = cityOrCoords;
           }
 
-          const weatherData = await weatherService.fetchWeather(coords, i18n.language?.split('-')[0] || 'en');
+          const weatherData = await weatherService.fetchWeather(primaryCity, i18n.language?.split('-')[0] || 'en');
 
           set({
             loading: false,
@@ -61,8 +74,8 @@ export const useStore = create<Store>()(
             cityFound: true,
           });
 
-          await get().fetchImage(coords.name);
-          await get().foreCast(coords);
+          await get().fetchImage(primaryCity.name);
+          await get().foreCast(primaryCity);
         } catch (error) {
           set({ loading: false, cityFound: false, weatherData: null });
           if (error instanceof Error) {

@@ -18,7 +18,13 @@ describe('weatherService', () => {
 
       const result = await weatherService.getGeo('Moscow')
 
-      expect(result).toEqual({ lat: 55.75, lon: 37.61, name: 'Moscow' })
+      expect(result).toEqual([{
+        lat: 55.75,
+        lon: 37.61,
+        name: 'Moscow',
+        country: undefined,
+        state: undefined
+      }])
       expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('geo/1.0/direct'), expect.objectContaining({
         params: expect.objectContaining({ q: 'Moscow', appid: expect.any(String) })
       }))

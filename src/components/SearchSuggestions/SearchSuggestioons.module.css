@@ -1,0 +1,87 @@
+.searchSuggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin: 8px 0 0 0;
+  padding: 8px;
+  list-style: none;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.isVisible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.searchSuggestion {
+  margin-bottom: 4px;
+}
+
+.searchSuggestion:last-child {
+  margin-bottom: 0;
+}
+
+.searchSuggestionButton {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background: transparent;
+  border: none;
+  border-radius: 15px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  text-align: left;
+}
+
+.searchSuggestionButton:hover,
+.isSelected .searchSuggestionButton {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.searchSuggestionName {
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.searchSuggestionCountry {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 10px;
+}
+
+/* Стилизация скроллбара */
+.searchSuggestions::-webkit-scrollbar {
+  width: 6px;
+}
+
+.searchSuggestions::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.searchSuggestions::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+.searchSuggestions::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
