@@ -2,6 +2,8 @@ export interface CityCoords {
   lat: number;
   lon: number;
   name: string;
+  country: string;
+  state?: string;
 }
 
 export interface CurrentWeatherData {
@@ -40,10 +42,10 @@ export interface ForecastItem {
   }[];
   dt_txt: string;
   wind: {
-      speed: number;
-      deg: number;
-      gust: number;
-  }
+    speed: number;
+    deg: number;
+    gust: number;
+  };
 }
 
 export interface ForecastData {
