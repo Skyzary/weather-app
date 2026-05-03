@@ -19,8 +19,13 @@ export default function App() {
   const fetchWeather = useStore((state) => state.fetchWeather);
 
   const onLanguageChange = () => {
-    if (weatherData?.name) {
-      fetchWeather(weatherData.name);
+    if (weatherData && weatherData.coords) {
+      fetchWeather({
+        lat: weatherData.coords.lat,
+        lon: weatherData.coords.lat,
+        name: weatherData.name,
+        country: '',
+      });
     }
   };
 
