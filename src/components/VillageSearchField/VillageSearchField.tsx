@@ -38,6 +38,9 @@ export default function VillageSearchField() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCity(e.target.value);
+    if (suggestions.length !== 0) {
+      setIsVisible(true);
+    }
   };
 
   const handleSuggestionClick = (suggestion: CityCoords) => {
@@ -91,7 +94,11 @@ export default function VillageSearchField() {
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               placeholder={t('enterCityName')}
-              onFocus={() => setIsVisible(true)}
+              onFocus={() => {
+                if (suggestions.length !== 0) {
+                  setIsVisible(true);
+                }
+              }}
               onBlur={() => setTimeout(() => setIsVisible(false), 200)}
             />
           </label>
