@@ -7,6 +7,7 @@ export interface CityCoords {
 }
 
 export interface CurrentWeatherData {
+  coords: CityCoords;
   name: string;
   main: {
     temp: number;

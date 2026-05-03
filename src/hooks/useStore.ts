@@ -5,7 +5,6 @@ import { weatherService } from '../services/weatherService';
 import { imageService } from '../services/imageService';
 import iziToast from 'izitoast';
 import i18n from '../i18n';
-
 export interface Store {
   city: string;
   setCity: (city: string) => void;
@@ -66,20 +65,22 @@ export const useStore = create<Store>()(
             primaryCity = cityOrCoords;
           }
 
-          const weatherData = await weatherService.fetchWeather(primaryCity, i18n.language?.split('-')[0] || 'en');
+          const fetchedData = await weatherService.fetchWeather(primaryCity, i18n.language?.split('-')[0] || 'en');
 
-          set({
-            loading: false,
-            weatherData,
-            cityFound: true,
-          });
+          if (fetchedData) {
+            set({
+              loading: false,
+              weatherData: fetchedData,
+              cityFound: true,
+            });
+          }
 
-          await get().fetchImage(primaryCity.name);
+          await get().fetchImage(fetchedData.name);
           await get().foreCast(primaryCity);
         } catch (error) {
           set({ loading: false, cityFound: false, weatherData: null });
           if (error instanceof Error) {
-            let messageKey = 'error';
+            let messageKey: string;
             switch (error.message) {
               case 'cityNotFound':
                 messageKey = 'cityNotFound';
@@ -111,7 +112,7 @@ export const useStore = create<Store>()(
         } catch (error) {
           set({ cityImage: undefined });
           if (error instanceof Error) {
-            let messageKey = 'imageError';
+            let messageKey: string;
             switch (error.message) {
               case 'authErrorUnsplash':
                 messageKey = 'authErrorUnsplash';
@@ -146,7 +147,7 @@ export const useStore = create<Store>()(
           }
         } catch (error) {
           if (error instanceof Error) {
-            let messageKey = 'forecastError';
+            let messageKey: string;
             switch (error.message) {
               case 'authError':
                 messageKey = 'authError';

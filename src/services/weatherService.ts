@@ -58,7 +58,7 @@ export const weatherService = {
     }
   },
 
-  async fetchWeather(coords: CityCoords, language: string = 'en'): Promise<CurrentWeatherData | undefined> {
+  async fetchWeather(coords: CityCoords, language: string = 'en'): Promise<CurrentWeatherData> {
     /**
      * @param coords - {lat, lon}
      * @returns - CurrentWeatherData */
